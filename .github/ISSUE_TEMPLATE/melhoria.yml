@@ -1,0 +1,51 @@
+name: "Melhoria ✨"
+description: "Use este modelo para sugerir melhorias ou novas funcionalidades no Verso."
+title: "[Melhoria] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧠 Contexto
+        Explique o contexto ou problema que esta melhoria resolve.
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: ✍️ Descrição da melhoria
+      description: Explique detalhadamente a melhoria ou nova funcionalidade.
+      placeholder: "Exemplo: Implementar sistema de favoritos para artigos."
+    validations:
+      required: true
+
+  - type: textarea
+    id: beneficios
+    attributes:
+      label: 🎯 Benefícios esperados
+      description: Liste os benefícios ou impactos positivos desta melhoria.
+      placeholder: "Exemplo: Usuários poderão salvar artigos para leitura posterior."
+    validations:
+      required: false
+
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: 🚦 Prioridade
+      options:
+        - Alta
+        - Média
+        - Baixa
+    validations:
+      required: false
+
+  - type: input
+    id: tempo_estimado
+    attributes:
+      label: ⏱️ Tempo estimado
+      placeholder: "Exemplo: 1 dia, 2 dias, 4h"
+
+  - type: textarea
+    id: observacoes
+    attributes:
+      label: 💬 Observações adicionais
+      placeholder: Dependências, links, exemplos, referências.

@@ -1,0 +1,54 @@
+name: "Tarefa 🛠️"
+description: "Use este modelo para registrar uma nova tarefa ou funcionalidade do projeto Verso."
+title: "[Tarefa] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧠 Contexto
+        Descreva brevemente o que esta tarefa aborda e qual é o objetivo dela dentro do projeto.
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: ✍️ Descrição da tarefa
+      description: Explique o que deve ser feito e por quê.
+      placeholder: "Exemplo: Criar endpoint de cadastro de usuário com autenticação básica."
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: ✅ Critérios de Aceite
+      description: Liste os critérios que definem quando esta tarefa será considerada concluída.
+      placeholder: |
+        - O endpoint deve permitir cadastrar um novo usuário.
+        - A senha deve ser salva de forma criptografada.
+        - O retorno deve incluir o ID e o email do usuário.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: 🚦 Prioridade
+      options:
+        - Alta
+        - Média
+        - Baixa
+    validations:
+      required: true
+
+  - type: input
+    id: tempo_estimado
+    attributes:
+      label: ⏱️ Tempo estimado
+      placeholder: "Exemplo: 4h, 1 dia, 2 dias"
+
+  - type: textarea
+    id: observacoes
+    attributes:
+      label: 💬 Observações adicionais
+      placeholder: Links, dependências, anotações, etc.

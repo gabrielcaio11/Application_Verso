@@ -1,0 +1,58 @@
+name: "Bug 🐞"
+description: "Use este modelo para reportar erros ou falhas no sistema Verso."
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧠 Contexto
+        Descreva onde o bug foi encontrado e o que deveria acontecer.
+
+  - type: textarea
+    id: passos
+    attributes:
+      label: 📝 Passos para reproduzir
+      description: Liste o passo a passo necessário para reproduzir o bug.
+      placeholder: |
+        1. Acessar a página de login.
+        2. Inserir credenciais válidas.
+        3. Clicar em "Entrar".
+        4. Observar o erro.
+    validations:
+      required: true
+
+  - type: textarea
+    id: resultado_esperado
+    attributes:
+      label: ✅ Resultado esperado
+      description: Explique o comportamento correto esperado.
+      placeholder: "Exemplo: Usuário deve ser autenticado e redirecionado para a dashboard."
+    validations:
+      required: true
+
+  - type: textarea
+    id: resultado_obtido
+    attributes:
+      label: ❌ Resultado obtido
+      description: Explique o que realmente aconteceu.
+      placeholder: "Exemplo: Página retorna erro 500."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: prioridade
+    attributes:
+      label: 🚦 Prioridade
+      options:
+        - Alta
+        - Média
+        - Baixa
+    validations:
+      required: true
+
+  - type: textarea
+    id: observacoes
+    attributes:
+      label: 💬 Observações adicionais
+      placeholder: Logs, links, prints de tela ou contexto adicional.
