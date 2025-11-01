@@ -1,7 +1,7 @@
 package br.com.gabrielcaio.verso.config;
 
-import br.com.gabrielcaio.verso.models.Roles;
-import br.com.gabrielcaio.verso.models.User;
+import br.com.gabrielcaio.verso.domain.entity.Roles;
+import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.repositories.RolesRepository;
 import br.com.gabrielcaio.verso.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

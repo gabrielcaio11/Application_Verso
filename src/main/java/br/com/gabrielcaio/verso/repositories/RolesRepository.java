@@ -1,6 +1,6 @@
 package br.com.gabrielcaio.verso.repositories;
 
-import br.com.gabrielcaio.verso.models.Roles;
+import br.com.gabrielcaio.verso.domain.entity.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
