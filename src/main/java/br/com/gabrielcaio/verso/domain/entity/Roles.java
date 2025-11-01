@@ -1,4 +1,4 @@
-package br.com.gabrielcaio.verso.models;
+package br.com.gabrielcaio.verso.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,9 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name = "tb_roles")
+@Table(name = "tb_roles", uniqueConstraints = {
+        @UniqueConstraint(name = "uk_role_name", columnNames = "name")
+})
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,7 +22,7 @@ public class Roles implements GrantedAuthority {
     @Column(name = "role_id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
 
     @Override
