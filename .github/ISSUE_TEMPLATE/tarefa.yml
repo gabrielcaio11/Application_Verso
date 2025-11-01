@@ -3,12 +3,14 @@ description: "Use este modelo para registrar uma nova tarefa ou funcionalidade d
 title: "[Tarefa] "
 labels: ["enhancement"]
 body:
-  - type: markdown
+  - type: textarea
+    id: contexto
     attributes:
-      label: | 
-        ## 🧠 Contexto
+      label: "🧠 Contexto"
       description: Descreva brevemente o que esta tarefa aborda e qual é o objetivo dela dentro do projeto.
       placeholder: A Fase 1 tem como objetivo implementar a camada de domínio do projeto Verso, criando as principais entidades (User, Article e Category) e garantindo que as regras de negócio (RNs) relacionadas ao modelo de dados sejam corretamente aplicadas.
+    validations:
+      required: true
   - type: textarea
     id: descricao
     attributes:
