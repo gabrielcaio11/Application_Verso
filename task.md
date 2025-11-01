@@ -1,0 +1,27 @@
+1️⃣ Tarefas principais (Tasks)
+
+| Fase | Título                                                     | Descrição                                                                              | Critérios de Aceite                                                                                                                               | Prioridade | Status      |
+| ---- | ---------------------------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ----------- |
+| 0    | `[Fase 0] Configuração inicial do projeto`                 | Configuração do projeto Spring Boot, dependências, Docker, Basic Auth e Swagger.       | - Projeto compila.<br>- Docker build funcionando.<br>- Basic Auth funcionando.<br>- Swagger acessível com autenticação.                           | Alta       | ✅ Concluída |
+| 1    | `[Fase 1] Criar entidades User, Article e Category`        | Implementar entidades JPA de acordo com RN01–RN12.                                     | - User: email único, senha criptografada.<br>- Article: status RASCUNHO/PUBLICADO, relacionamento com User e Category.<br>- Category: nome único. | Alta       | 🔲 Pendente |
+| 2    | `[Fase 2] CRUD de artigos`                                 | Criar endpoints para criar, listar, atualizar e excluir artigos respeitando RN03–RN10. | - Autor só edita/exclui seus artigos.<br>- Status RASCUNHO só visível ao autor.<br>- Artigos publicados visíveis a todos.                         | Alta       | 🔲 Pendente |
+| 3    | `[Fase 3] CRUD de categorias`                              | Criar endpoints de criação, edição e exclusão de categorias (apenas ADMIN).            | - Nome único.<br>- Exclusão define “Sem categoria” nos artigos.                                                                                   | Média      | 🔲 Pendente |
+| 4    | `[Fase 4] Configurar Swagger/OpenAPI (documentação final)` | Documentar todos os endpoints e habilitar interface interativa completa.               | - Endpoints visíveis no Swagger UI.<br>- Basic Auth configurado no Swagger.                                                                       | Média      | 🔲 Pendente |
+
+2️⃣ Bugs iniciais (Bugs)
+
+| Título                                                      | Descrição                                                 | Passos para reproduzir                                                            | Resultado Esperado                | Resultado Obtido        | Prioridade | Status      |
+| ----------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------- | ----------------------- | ---------- | ----------- |
+| `[Bug] Usuário consegue acessar endpoint sem autenticação`  | Endpoint `/api/articles` retorna sucesso mesmo sem login. | 1. Acessar `/api/articles` sem autenticação.                                      | Retornar 401 Unauthorized         | Retorna 200 OK          | Alta       | 🔲 Pendente |
+| `[Bug] Senha não está sendo criptografada ao criar usuário` | Novo usuário é salvo com senha em texto plano.            | 1. Criar usuário via endpoint.<br>2. Verificar campo senha no banco.              | Senha criptografada usando BCrypt | Senha em texto plano    | Alta       | 🔲 Pendente |
+| `[Bug] Artigos RASCUNHO visíveis a outros usuários`         | Status RASCUNHO deveria ser restrito ao autor.            | 1. Criar artigo em RASCUNHO.<br>2. Logar com outro usuário.<br>3. Listar artigos. | RASCUNHO não visível              | Artigo aparece na lista | Alta       | 🔲 Pendente |
+
+3️⃣ Melhorias iniciais (Enhancements)
+
+| Título                                                 | Descrição                                                    | Benefícios                                                | Prioridade | Status      |
+| ------------------------------------------------------ | ------------------------------------------------------------ | --------------------------------------------------------- | ---------- | ----------- |
+| `[Melhoria] Implementar upload de imagens nos artigos` | Permitir que usuários anexem imagens aos artigos.            | Artigos mais ricos e atrativos.                           | Média      | 🔲 Pendente |
+| `[Melhoria] Sistema de comentários`                    | Permitir que usuários comentem artigos.                      | Engajamento e discussões sobre o conteúdo.                | Média      | 🔲 Pendente |
+| `[Melhoria] Favoritos`                                 | Usuários podem salvar artigos para leitura posterior.        | Facilita o acompanhamento de artigos importantes.         | Baixa      | 🔲 Pendente |
+| `[Melhoria] Notificações`                              | Alertar usuários sobre novos artigos ou interações.          | Mantém usuários engajados.                                | Baixa      | 🔲 Pendente |
+| `[Melhoria] Recomendações de artigos`                  | Mostrar artigos relacionados com base em categoria ou autor. | Melhor experiência de navegação e descoberta de conteúdo. | Baixa      | 🔲 Pendente |

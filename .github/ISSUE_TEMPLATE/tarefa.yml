@@ -5,10 +5,10 @@ labels: ["enhancement"]
 body:
   - type: markdown
     attributes:
-      value: |
+      label: | 
         ## 🧠 Contexto
-        Descreva brevemente o que esta tarefa aborda e qual é o objetivo dela dentro do projeto.
-
+      description: Descreva brevemente o que esta tarefa aborda e qual é o objetivo dela dentro do projeto.
+      placeholder: A Fase 1 tem como objetivo implementar a camada de domínio do projeto Verso, criando as principais entidades (User, Article e Category) e garantindo que as regras de negócio (RNs) relacionadas ao modelo de dados sejam corretamente aplicadas.
   - type: textarea
     id: descricao
     attributes:

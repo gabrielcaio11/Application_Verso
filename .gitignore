@@ -37,3 +37,6 @@ build/
 
 ### postgres-data ###
 postgres-data/
+
+### Tasks ###
+task.md
