@@ -49,4 +49,3 @@ public class Article {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
-

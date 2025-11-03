@@ -30,9 +30,8 @@ public class UserDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        // deletar todos os usuários e roles existentes (opcional)
-         userRepository.deleteAll();
-         rolesRepository.deleteAll();
+        userRepository.deleteAll();
+        rolesRepository.deleteAll();
 
         if (rolesRepository.existsByName("USER")) {
             Roles role_user = new Roles();

@@ -17,28 +17,28 @@ public class ControllerExeceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorMessage> handlerResourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
-        ErrorMessage err = new ErrorMessage(Instant.now(),status.value(), e.getMessage(),request.getRequestURI());
+        ErrorMessage err = new ErrorMessage(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<ErrorMessage> handlerEntityExists(EntityExistsException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.CONFLICT;
-        ErrorMessage err = new ErrorMessage(Instant.now(),status.value(), e.getMessage(),request.getRequestURI());
+        ErrorMessage err = new ErrorMessage(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(DataBaseException.class)
     public ResponseEntity<ErrorMessage> handlerDataBase(DataBaseException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-        ErrorMessage err = new ErrorMessage(Instant.now(),status.value(), e.getMessage(),request.getRequestURI());
+        ErrorMessage err = new ErrorMessage(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> handlerMethodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
-        ValidationError err = new ValidationError(Instant.now(),status.value(), "Dados invalidos",request.getRequestURI());
+        ValidationError err = new ValidationError(Instant.now(), status.value(), "Dados invalidos", request.getRequestURI());
 
         e.getFieldErrors().forEach(fieldError -> {
             err.addError(fieldError.getField(), fieldError.getDefaultMessage());
@@ -47,11 +47,17 @@ public class ControllerExeceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ErrorMessage> handleAccesDeniedException(AccessDeniedException e, HttpServletRequest request){
+    public ResponseEntity<ErrorMessage> handleAccesDeniedException(AccessDeniedException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.FORBIDDEN;
         ErrorMessage err = new ErrorMessage(Instant.now(), status.value(), "Acesso Negado.", request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorMessage> handleBusinessException(BusinessException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ErrorMessage err = new ErrorMessage(Instant.now(), status.value(), "Acesso Negado.", request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 }
 

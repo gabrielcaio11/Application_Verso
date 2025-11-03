@@ -13,30 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/verso/user")
 @RequiredArgsConstructor
-@Tag(name = "Authentication", description = "Endpoints para autenticação e registro")
-public class AuthController {
+@Tag(name = "User", description = "Endpoints para gerenciamento de usuários")
+public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "Login de usuário")
-    @GetMapping("/login")
-    public ResponseEntity<String> login() {
-        var message = "Sucesso ao realizar login";
-        return ResponseEntity.ok(message);
-    }
-
     @Operation(summary = "Registro de novo usuário")
-    @PostMapping("/register")
-    public ResponseEntity<String> register(@Valid @RequestBody UserDTO dto) {
+    @PostMapping
+    public ResponseEntity<Void> register(@Valid @RequestBody UserDTO dto) {
         userService.register(dto);
-        var message = "Sucesso ao registrar usuario";
-        return ResponseEntity.ok(message);
+        return ResponseEntity.status(201).build();
     }
 
     @Operation(summary = "Buscar todos os usuários")
-    @GetMapping("/users")
+    @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<String>> findAll() {
         var users = userService.findAll();

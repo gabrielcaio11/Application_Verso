@@ -5,15 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-    private String email;
-    private String password;
-    private Set<String> roles = new HashSet<>();
+public class UpdateArticleRequestDTO {
+    private String title;
+    private String content;
+    private String category;
+    private String status;
 }
