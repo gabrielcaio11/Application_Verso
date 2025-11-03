@@ -110,6 +110,4 @@ public class User implements UserDetails {
                 "\"roles\":" + roles.toString() +
                 "}";
     }
-
-
 }

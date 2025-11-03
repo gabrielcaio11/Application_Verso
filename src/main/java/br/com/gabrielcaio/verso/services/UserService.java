@@ -6,9 +6,12 @@ import br.com.gabrielcaio.verso.domain.entity.Roles;
 import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.repositories.RolesRepository;
 import br.com.gabrielcaio.verso.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -16,11 +19,17 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final RolesRepository rolesRepository;
 
+    public User getCurrentUser() {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+    }
+
+    @Transactional
     public void register(UserDTO dto){
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new EntityExistsException("Email já cadastrado");
@@ -33,7 +42,13 @@ public class UserService {
         addRoles(user,dto);
         userRepository.save(user);
     }
-    public void addRoles(User user,UserDTO dto) {
+
+    @Transactional(readOnly = true)
+    public List<String> findAll() {
+        return userRepository.findAll().stream().map(User::getUsername).toList();
+    }
+
+    private void addRoles(User user,UserDTO dto) {
         Set<String> roles = dto.getRoles();
         roles.stream()
                 .map(String::toUpperCase)
@@ -63,9 +78,5 @@ public class UserService {
         // limitar tamanho do username
         int MAX_LENGTH = 30;
         return local.length() > MAX_LENGTH ? local.substring(0, MAX_LENGTH) : local;
-    }
-
-    public List<String> findAll() {
-        return userRepository.findAll().stream().map(User::getUsername).toList();
     }
 }
