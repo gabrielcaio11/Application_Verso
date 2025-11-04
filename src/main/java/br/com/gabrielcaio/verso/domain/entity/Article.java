@@ -30,7 +30,7 @@ public class Article {
     private String content;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'PUBLICADO'")
     private ArticleStatus status;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

@@ -134,15 +134,5 @@ public class ArticleService {
         novaCategoria.setName(category);
         return categoryRepository.save(novaCategoria);
     }
-
-    private ArticleStatus getStatusFromString(String status) {
-        ArticleStatus articleStatus;
-        try {
-            articleStatus = ArticleStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new ResourceNotFoundException("Status inválido: " + status);
-        }
-        return articleStatus;
-    }
 }
 

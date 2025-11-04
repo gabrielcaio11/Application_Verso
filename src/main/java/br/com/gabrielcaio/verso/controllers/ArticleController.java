@@ -31,7 +31,7 @@ public class ArticleController {
     }
 
     @Operation(summary = "Buscar todos os artigos com status de rascunho com paginação")
-    @GetMapping
+    @GetMapping("/rascunhos")
     public ResponseEntity<Page<ArticleResponseWithTitleAndStatusAndCategoryName>> findAllRascunhos(
             @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
             Pageable pageable
