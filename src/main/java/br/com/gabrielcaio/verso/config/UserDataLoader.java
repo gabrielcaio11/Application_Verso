@@ -4,7 +4,6 @@ import br.com.gabrielcaio.verso.domain.entity.Roles;
 import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.repositories.RolesRepository;
 import br.com.gabrielcaio.verso.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,10 +17,10 @@ public class UserDataLoader implements CommandLineRunner {
     private final RolesRepository rolesRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
     public UserDataLoader(
             UserRepository userRepository,
-            RolesRepository rolesRepository, PasswordEncoder passwordEncoder
+            RolesRepository rolesRepository, 
+            PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
