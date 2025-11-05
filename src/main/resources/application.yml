@@ -13,9 +13,23 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
-        format_sql: true
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+        "[format_sql]": true
+        "[dialect]": org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
 server:
   port: ${SERVER_PORT}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+    filter: true
+    doc-expansion: none
+  packages-to-scan: br.com.gabrielcaio.verso.controllers
+  paths-to-match: /verso/**

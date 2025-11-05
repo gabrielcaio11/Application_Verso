@@ -6,7 +6,7 @@
 | 1    | `[Fase 1] Criar entidades User, Article e Category`        | Implementar entidades JPA de acordo com RN01–RN12.                                     | - User: email único, senha criptografada.<br>- Article: status RASCUNHO/PUBLICADO, relacionamento com User e Category.<br>- Category: nome único. | Alta       | ✅ Concluída |
 | 2    | `[Fase 2] CRUD de artigos`                                 | Criar endpoints para criar, listar, atualizar e excluir artigos respeitando RN03–RN10. | - Autor só edita/exclui seus artigos.<br>- Status RASCUNHO só visível ao autor.<br>- Artigos publicados visíveis a todos.                         | Alta       | ✅ Concluída |
 | 3    | `[Fase 3] CRUD de categorias`                              | Criar endpoints de criação, edição e exclusão de categorias (apenas ADMIN).            | - Nome único.<br>- Exclusão define “Sem categoria” nos artigos.                                                                                   | Média      | ✅ Concluída |
-| 4    | `[Fase 4] Configurar Swagger/OpenAPI (documentação final)` | Documentar todos os endpoints e habilitar interface interativa completa.               | - Endpoints visíveis no Swagger UI.<br>- Basic Auth configurado no Swagger.                                                                       | Média      | 🔲 Pendente |
+| 4    | `[Fase 4] Configurar Swagger/OpenAPI (documentação final)` | Documentar todos os endpoints e habilitar interface interativa completa.               | - Endpoints visíveis no Swagger UI.<br>- Basic Auth configurado no Swagger.                                                                       | Média      | ✅ Concluída |
 
 2️⃣ Bugs iniciais (Bugs)
 

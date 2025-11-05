@@ -1,33 +1,35 @@
 package br.com.gabrielcaio.verso.config;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.info.Contact;
-import io.swagger.v3.oas.annotations.info.Info;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Application Verso",
-                version = "v1",
-                contact = @Contact(
-                        name = "Gabriel Caio",
-                        email = "gabrielcaio848@gmail.com",
-                        url = "https://verso.com"
-                )
-        ),
-        security = {
-                @SecurityRequirement(name = "basicAuth")
-        }
-)
-@SecurityScheme(
-        name = "basicAuth",
-        type = SecuritySchemeType.HTTP,
-        scheme = "basic"
-)
-public class OpenApiConfiguration {
-}
+import java.util.List;
 
+@Configuration
+public class OpenApiConfiguration {
+
+        @Bean
+        public OpenAPI customOpenAPI() {
+                return new OpenAPI()
+                                .info(new Info()
+                                                .title("Application Verso")
+                                                .version("v1")
+                                                .description("API REST para sistema de criação, publicação e gerenciamento de artigos")
+                                                .contact(new Contact()
+                                                                .name("Gabriel Caio")
+                                                                .email("gabrielcaio848@gmail.com")
+                                                                .url("https://verso.com"))
+                                                .license(new License()
+                                                                .name("Apache 2.0")
+                                                                .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
+                                .servers(List.of(
+                                                new Server()
+                                                                .url("http://localhost:8080")
+                                                                .description("Ambiente Local")));
+        }
+}

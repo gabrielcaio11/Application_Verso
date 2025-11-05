@@ -1,7 +1,5 @@
 package br.com.gabrielcaio.verso.config;
 
-package br.com.gabrielcaio.verso.config;
-
 import br.com.gabrielcaio.verso.domain.entity.Category;
 import br.com.gabrielcaio.verso.repositories.CategoryRepository;
 import org.springframework.boot.CommandLineRunner;

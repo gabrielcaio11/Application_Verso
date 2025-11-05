@@ -8,12 +8,13 @@ import br.com.gabrielcaio.verso.repositories.RolesRepository;
 import br.com.gabrielcaio.verso.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Set;
 
 @Service
@@ -44,8 +45,8 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> findAll() {
-        return userRepository.findAll().stream().map(User::getUsername).toList();
+    public Page<String> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable).map(User::getUsername);
     }
 
     private void addRoles(User user,UserDTO dto) {

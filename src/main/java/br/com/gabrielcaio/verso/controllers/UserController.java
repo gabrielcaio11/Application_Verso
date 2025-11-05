@@ -3,9 +3,18 @@ package br.com.gabrielcaio.verso.controllers;
 import br.com.gabrielcaio.verso.dtos.UserDTO;
 import br.com.gabrielcaio.verso.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -13,25 +22,56 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/verso/user")
+@RequestMapping("/verso/users")
 @RequiredArgsConstructor
 @Tag(name = "User", description = "Endpoints para gerenciamento de usuários")
 public class UserController {
 
     private final UserService userService;
 
-    @Operation(summary = "Registro de novo usuário")
+    @Operation(
+            summary = "Registro de novo usuário",
+            description = "Cria um novo usuário no sistema. O email deve ser único."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
+            @ApiResponse(responseCode = "422", description = "Erro de validação - email já cadastrado"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @PostMapping
-    public ResponseEntity<Void> register(@Valid @RequestBody UserDTO dto) {
+    public ResponseEntity<Void> register(
+            @RequestBody(
+                    description = "Dados do usuário a ser criado",
+                    required = true,
+                    content = @Content(schema = @Schema(implementation = UserDTO.class))
+            )
+            @Valid @org.springframework.web.bind.annotation.RequestBody UserDTO dto) {
         userService.register(dto);
         return ResponseEntity.status(201).build();
     }
 
-    @Operation(summary = "Buscar todos os usuários")
+    @Operation(
+            summary = "Buscar todos os usuários",
+            description = "Retorna uma lista de todos os usernames cadastrados. Apenas usuários com perfil ADMIN podem acessar."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de usuários retornada com sucesso",
+                    content = @Content(schema = @Schema(implementation = List.class))
+            ),
+            @ApiResponse(responseCode = "401", description = "Não autorizado"),
+            @ApiResponse(responseCode = "403", description = "Acesso negado - apenas ADMIN pode listar usuários"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<String>> findAll() {
-        var users = userService.findAll();
+    public ResponseEntity<Page<String>> findAll(
+            @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
+            Pageable pageable
+    ) {
+        var users = userService.findAll(pageable);
         return ResponseEntity.ok(users);
     }
 }
