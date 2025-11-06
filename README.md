@@ -66,6 +66,18 @@ A plataforma foi projetada para facilitar o compartilhamento de conhecimento, of
   - Documentação OpenAPI 3.0 completa
   - Exemplos de requisições e respostas
 
+- **Sistema de Comentários**
+  - Comentar em artigos publicados (comentário raiz ou resposta usando `parentId`)
+  - Listagem paginada
+    - Threaded (raiz paginada com respostas aninhadas)
+  - Criação de comentários
+  - Exclusão de comentário
+    - Permissões: autor do comentário ou autor do artigo
+  - Contador de comentários por artigo (`comments_count`) mantido em criação/remoção
+  - Notificações:
+    - Autor do artigo é notificado ao receber novo comentário
+    - Autor do comentário é notificado ao receber uma resposta
+
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
@@ -182,7 +194,6 @@ O projeto segue uma arquitetura em camadas:
 
 ## 🔮 Implementações Futuras
 
-- **Sistema de Comentários** - Permitir discussões nos artigos publicados
 - **Curtidas e Reações** - Sistema de interação com artigos
 - **Upload de Imagens** - Inclusão de mídia nos artigos
 - **Recomendações** - Exibir artigos semelhantes com base em categorias ou autor
