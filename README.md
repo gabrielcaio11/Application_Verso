@@ -38,6 +38,13 @@ A plataforma foi projetada para facilitar o compartilhamento de conhecimento, of
   - Sistema de roles (USER e ADMIN)
   - Validação de email único
 
+- **Sistema de Favoritos**
+  - Adicionar artigos publicados aos favoritos
+  - Remover artigos dos favoritos
+  - Listar artigos favoritados com paginação
+  - Verificar se um artigo está nos favoritos
+  - Cada usuário pode favoritar apenas artigos publicados
+
 - **Documentação de API**
   - Interface Swagger UI para testes e documentação
   - Documentação OpenAPI 3.0 completa
@@ -161,7 +168,6 @@ O projeto segue uma arquitetura em camadas:
 
 - **Sistema de Comentários** - Permitir discussões nos artigos publicados
 - **Curtidas e Reações** - Sistema de interação com artigos
-- **Favoritos** - Salvar artigos para leitura posterior
 - **Upload de Imagens** - Inclusão de mídia nos artigos
 - **Sistema de Notificações** - Alertar usuários sobre novos artigos de autores seguidos
 - **Recomendações** - Exibir artigos semelhantes com base em categorias ou autor
