@@ -8,14 +8,13 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -25,17 +24,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            UserDetailsService userDetailsService,
-            List<String> swaggerPublicPaths) throws Exception {
+            UserDetailsService userDetailsService
+    ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/verso/users/register").permitAll()
-                        .requestMatchers(swaggerPublicPaths.toArray(new String[0])).permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
                 .build();
+    }
+
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/swagger-ui/**")
+                .requestMatchers("/swagger-ui.html")
+                .requestMatchers("/v3/api-docs/**")
+                .requestMatchers("/api-docs/**")
+                .requestMatchers("/webjars/**");
     }
 
     @Bean
@@ -51,15 +60,5 @@ public class SecurityConfig {
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults() {
         return new GrantedAuthorityDefaults("");
-    }
-
-    @Bean
-    public List<String> swaggerPublicPaths() {
-        return List.of(
-                "/swagger-ui/**",
-                "/swagger-ui.html",
-                "/v3/api-docs/**",
-                "/api-docs/**",
-                "/webjars/**");
     }
 }
