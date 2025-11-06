@@ -1,36 +1,182 @@
 # Verso
 
-Este documento descreve como construir e executar a 
-aplicação usando Docker e como acessar a interface do Swagger (OpenAPI).
+## 📋 Sobre o Projeto
 
-## Requisito
-- `Docker` instalado na máquina.
+O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em Java com Spring Boot. A aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado em perfis de usuário (comum e administrador).
 
-Para subir a aplicação utilizando Docker, siga os passos abaixo:
-### Monta as imagens e sobe os containers
+A plataforma foi projetada para facilitar o compartilhamento de conhecimento, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação e gerenciamento de usuários.
+
+## 🚀 Funcionalidades
+
+### Funcionalidades Principais
+
+- **Autenticação e Autorização**
+  - Sistema de autenticação HTTP Basic
+  - Controle de acesso baseado em roles
+  - Registro de novos usuários
+  - Criptografia de senhas com BCrypt
+
+- **Gerenciamento de Artigos**
+  - Criação, edição e exclusão de artigos
+  - Sistema de status: `RASCUNHO` e `PUBLICADO`
+  - Artigos em rascunho visíveis apenas para o autor
+  - Artigos publicados visíveis para todos os usuários autenticados
+  - Associação de artigos a categorias
+  - Paginação e ordenação de resultados
+  - Busca de artigos publicados
+  - Busca de rascunhos do usuário autenticado
+
+- **Gerenciamento de Categorias** (apenas ADMIN)
+  - Criação, edição e exclusão de categorias
+  - Listagem de categorias com paginação
+  - Validação de nomes únicos
+  - Migração automática de artigos ao excluir categoria
+
+- **Gerenciamento de Usuários**
+  - Registro de novos usuários
+  - Listagem de usuários (apenas ADMIN)
+  - Sistema de roles (USER e ADMIN)
+  - Validação de email único
+
+- **Documentação de API**
+  - Interface Swagger UI para testes e documentação
+  - Documentação OpenAPI 3.0 completa
+  - Exemplos de requisições e respostas
+
+## 🛠️ Tecnologias Utilizadas
+
+### Backend
+- **Java 21** - Linguagem de programação
+- **Spring Boot 3.5.6** - Framework principal
+- **Spring Data JPA** - Persistência de dados
+- **Hibernate** - ORM
+- **Spring Security** - Segurança e autenticação
+- **Spring Web** - API REST
+- **Spring Validation** - Validação de dados
+
+### Banco de Dados
+- **PostgreSQL 18** - Banco de dados relacional
+
+### Ferramentas e Bibliotecas
+- **Lombok** - Redução de boilerplate
+- **MapStruct** - Mapeamento de objetos
+- **Springdoc OpenAPI** - Documentação da API
+- **Dotenv Java** - Gerenciamento de variáveis de ambiente
+- **BCrypt** - Criptografia de senhas
+
+### Testes
+- **JUnit 5** - Framework de testes
+- **Mockito** - Mocking para testes
+
+### DevOps
+- **Docker** - Containerização
+- **Docker Compose** - Orquestração de containers
+- **Maven** - Gerenciamento de dependências
+
+## 📦 Pré-requisitos
+
+- `Docker` instalado na máquina
+
+### Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 ```
-docker compose up --build
+POSTGRES_DB=name_db
+POSTGRES_USER=user_db
+POSTGRES_PASSWORD=password_db
+SERVER_PORT=8080
 ```
+## 🚀 Como Executar
 
-## Acessando o Swagger / OpenAPI
-- Swagger UI (interface web):
-    - `http://localhost:8080/swagger-ui.html`
-## 🚀 Tecnologias Utilizadas
+### Usando Docker Compose
 
-- **Java 21**
-- **Spring Boot 3.5.6**
-- **JPA/Hibernate**
-- **Postgres**
-- **Spring Web**
-- **Spring Data JPA**
-- **Lombok**
-- **Springdoc OpenAPI UI**
-- **Docker**
-- **Docker Compose**
-- **Mapstruct**
-- **JUnit 5**
-- **Mockito**
-- **Swagger UI**
+1. Clone o repositório:
+    ```
+    git clone https://github.com/gabrielcaio11/Application_Verso.git
+    ```
+    ```
+    cd Application_Verso
+    ```
+2. Crie o arquivo `.env` com as variáveis de ambiente necessárias (veja seção Pré-requisitos)
+
+3. Execute o Docker Compose para montar as imagens e subir os containers:
+    ```
+    docker compose up --build
+    ```
+4. Aguarde a aplicação iniciar. Você verá mensagens indicando que a aplicação está rodando.
+
+5. Acesse a aplicação:
+   - **API Base**: `http://localhost:8080`
+   - **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+   - **OpenAPI Docs**: `http://localhost:8080/api-docs`
+
+### Banco de Dados
+
+O PostgreSQL estará disponível na porta `5433` (configurável no `docker-compose.yaml`).
+
+## 📚 Documentação da API
+
+A documentação completa da API está disponível através do Swagger UI em:
+- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+
+A documentação inclui:
+- Todos os endpoints disponíveis
+- Parâmetros de requisição e resposta
+- Exemplos de uso
+- Códigos de status HTTP
+- Possibilidade de testar os endpoints diretamente pela interface
+
+## 🏗️ Arquitetura
+
+O projeto segue uma arquitetura em camadas:
+
+- **Controllers** - Camada de apresentação (REST API)
+- **Services** - Lógica de negócio
+- **Repositories** - Acesso a dados
+- **DTOs** - Objetos de transferência de dados
+- **Mappers** - Conversão entre entidades e DTOs (MapStruct)
+- **Validators** - Validações de negócio
+- **Domain** - Entidades e enums do domínio
+- **Security** - Configurações de segurança
+- **Config** - Configurações da aplicação
+
+## 🔐 Segurança
+
+- Autenticação HTTP Basic
+- Senhas criptografadas com BCrypt (strength 10)
+- Controle de acesso baseado em roles
+- Endpoints protegidos por autenticação
+- Validação de dados de entrada
+
+## 📝 Regras de Negócio Principais
+
+- Cada usuário possui um email único
+- Artigos em rascunho só podem ser visualizados pelo autor
+- Apenas o autor pode editar ou excluir seus próprios artigos
+- Apenas administradores podem gerenciar categorias
+- Categorias têm nomes únicos
+- Ao excluir uma categoria, os artigos são movidos para a categoria padrão
+
+## 🔮 Implementações Futuras
+
+- **Sistema de Comentários** - Permitir discussões nos artigos publicados
+- **Curtidas e Reações** - Sistema de interação com artigos
+- **Favoritos** - Salvar artigos para leitura posterior
+- **Upload de Imagens** - Inclusão de mídia nos artigos
+- **Sistema de Notificações** - Alertar usuários sobre novos artigos de autores seguidos
+- **Recomendações** - Exibir artigos semelhantes com base em categorias ou autor
+- **Sistema de Seguidores** - Seguir autores e receber notificações
+- **Busca Avançada** - Filtros por categoria, autor, data, palavras-chave
+- **Estatísticas e Métricas** - Visualização de dados sobre artigos e usuários
+- **Exportação de Artigos** - Exportar artigos em diferentes formatos (PDF, Markdown)
+- **Editor Rich Text** - Editor WYSIWYG para criação de artigos
+- **Versionamento de Artigos** - Histórico de alterações nos artigos
+- **Tags** - Sistema de tags além de categorias
+- **Autenticação JWT** - Substituir HTTP Basic por tokens JWT
+- **API Rate Limiting** - Limitação de requisições por usuário
 
 ## 📫 Contato
-- `Linkedin`**:** [Gabriel Caio](https://www.linkedin.com/in/gabriel-caio/)
+
+- **LinkedIn**: [Gabriel Caio](https://www.linkedin.com/in/gabriel-caio/)
+
+---
