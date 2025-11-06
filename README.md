@@ -45,6 +45,22 @@ A plataforma foi projetada para facilitar o compartilhamento de conhecimento, of
   - Verificar se um artigo está nos favoritos
   - Cada usuário pode favoritar apenas artigos publicados
 
+- **Sistema de Seguidores**
+  - Seguir e deixar de seguir outros usuários
+  - Listar usuários que você está seguindo
+  - Listar seus seguidores
+  - Visualizar perfil de usuário com contagem de seguidores
+  - Verificar se está seguindo um usuário
+  - Não é possível seguir a si mesmo
+
+- **Sistema de Notificações**
+  - Receber notificações quando autores seguidos publicam novos artigos
+  - Listar todas as notificações com paginação
+  - Listar apenas notificações não lidas
+  - Marcar notificações como lidas
+  - Marcar todas as notificações como lidas
+  - Contar notificações não lidas
+
 - **Documentação de API**
   - Interface Swagger UI para testes e documentação
   - Documentação OpenAPI 3.0 completa
@@ -169,9 +185,7 @@ O projeto segue uma arquitetura em camadas:
 - **Sistema de Comentários** - Permitir discussões nos artigos publicados
 - **Curtidas e Reações** - Sistema de interação com artigos
 - **Upload de Imagens** - Inclusão de mídia nos artigos
-- **Sistema de Notificações** - Alertar usuários sobre novos artigos de autores seguidos
 - **Recomendações** - Exibir artigos semelhantes com base em categorias ou autor
-- **Sistema de Seguidores** - Seguir autores e receber notificações
 - **Busca Avançada** - Filtros por categoria, autor, data, palavras-chave
 - **Estatísticas e Métricas** - Visualização de dados sobre artigos e usuários
 - **Exportação de Artigos** - Exportar artigos em diferentes formatos (PDF, Markdown)

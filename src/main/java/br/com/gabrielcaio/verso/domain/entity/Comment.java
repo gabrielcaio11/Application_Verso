@@ -1,48 +1,46 @@
 package br.com.gabrielcaio.verso.domain.entity;
 
-import br.com.gabrielcaio.verso.domain.enums.ArticleStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(name = "tb_articles")
+@Table(name = "tb_comments")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Article {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "article_id")
+    @Column(name = "comment_id")
     private Long id;
-
-    @Column(nullable = false, length = 150)
-    private String title;
 
     @Lob
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "VARCHAR(20) DEFAULT 'PUBLICADO'")
-    private ArticleStatus status;
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "fk_article_user"))
+    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_user"))
     private User author;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false, foreignKey = @ForeignKey(name = "fk_article_category"))
-    private Category category;
+    @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_article"))
+    private Article article;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "fk_comment_parent"))
+    private Comment parent;
 
-    @Column(name = "comments_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
-    private Long commentsCount = 0L;
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OrderBy("createdAt ASC")
+    private Set<Comment> replies;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

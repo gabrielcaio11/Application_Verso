@@ -33,6 +33,7 @@ public class ArticleService {
     private final ArticleUpdateValidator articleUpdateValidator;
     private final ArticleCreateValidator articleCreateValidator;
     private final ArticleDeleteValidator articleDeleteValidator;
+    private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
     public Page<ArticleResponseWithTitleAndStatusAndCategoryName> findAllArticles(
@@ -73,6 +74,9 @@ public class ArticleService {
 
         articleUpdateValidator.validate(article, updated, currentUser);
 
+        ArticleStatus oldStatus = article.getStatus();
+        ArticleStatus newStatus = ArticleStatus.valueOf(updated.getStatus().toUpperCase());
+
         if (!updated.getTitle().isBlank()) {
             article.setTitle(updated.getTitle());
         }
@@ -85,10 +89,14 @@ public class ArticleService {
             article.setCategory(category);
         }
 
-        ArticleStatus newStatus = ArticleStatus.valueOf(updated.getStatus().toUpperCase());
         article.setStatus(newStatus);
-
         articleRepository.save(article);
+
+        // Criar notificações quando um artigo é publicado (transição de rascunho para publicado)
+        if (oldStatus == ArticleStatus.RASCUNHO && newStatus == ArticleStatus.PUBLICADO) {
+            notificationService.createNotificationForFollowers(article);
+        }
+
         return articleMapper.toResponseWithTitleAndStatusAndCategoryName(article);
     }
 
@@ -123,9 +131,14 @@ public class ArticleService {
         category.getArticles().add(article);
 
         article = articleRepository.save(article);
+
+        // Criar notificações se o artigo foi criado como publicado
+        if (article.getStatus() == ArticleStatus.PUBLICADO) {
+            notificationService.createNotificationForFollowers(article);
+        }
+
         return articleMapper.toCreateResponse(article);
     }
-
     private Category cadastrarCategoria(String category) {
         if (categoryRepository.findByName(category).isPresent()) {
             return categoryRepository.findByName(category).get();
