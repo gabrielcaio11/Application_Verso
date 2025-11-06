@@ -4,7 +4,7 @@
 
 O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em Java com Spring Boot. A aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado em perfis de usuário (comum e administrador).
 
-A plataforma foi projetada para facilitar o compartilhamento de conhecimento, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação e gerenciamento de usuários.
+A plataforma foi projetada para facilitar o compartilhamento de conhecimento, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários, reações e favoritos) e notificações.
 
 ## 🚀 Funcionalidades
 
@@ -77,6 +77,18 @@ A plataforma foi projetada para facilitar o compartilhamento de conhecimento, of
   - Notificações:
     - Autor do artigo é notificado ao receber novo comentário
     - Autor do comentário é notificado ao receber uma resposta
+
+- **Sistema de Curtidas e Reações**
+  - Reagir a artigos publicados com diferentes tipos de reação (LIKE, LOVE, LAUGH, WOW, SAD, ANGRY)
+  - Adicionar ou atualizar reação em um artigo
+  - Remover reação de um artigo
+  - Listar todas as reações de um artigo com paginação
+  - Listar todas as reações do usuário autenticado
+  - Obter estatísticas detalhadas de reações por artigo (contagem por tipo)
+  - Verificar qual reação o usuário autenticado deu em um artigo
+  - Contador de curtidas (`likes_count`) mantido automaticamente
+  - Apenas artigos publicados podem receber reações
+  - Cada usuário pode ter apenas uma reação por artigo (atualizável)
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -191,10 +203,11 @@ O projeto segue uma arquitetura em camadas:
 - Apenas administradores podem gerenciar categorias
 - Categorias têm nomes únicos
 - Ao excluir uma categoria, os artigos são movidos para a categoria padrão
+- Apenas artigos publicados podem receber reações e comentários
+- Cada usuário pode ter apenas uma reação por artigo (atualizável)
 
 ## 🔮 Implementações Futuras
 
-- **Curtidas e Reações** - Sistema de interação com artigos
 - **Upload de Imagens** - Inclusão de mídia nos artigos
 - **Recomendações** - Exibir artigos semelhantes com base em categorias ou autor
 - **Busca Avançada** - Filtros por categoria, autor, data, palavras-chave

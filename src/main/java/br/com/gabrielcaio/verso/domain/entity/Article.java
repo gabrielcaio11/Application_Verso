@@ -44,6 +44,9 @@ public class Article {
     @Column(name = "comments_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
     private Long commentsCount = 0L;
 
+    @Column(name = "likes_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long likesCount = 0L;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
