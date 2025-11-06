@@ -17,9 +17,14 @@
 
 | Título                                                      | Descrição                                                 | Passos para reproduzir                                                            | Resultado Esperado                | Resultado Obtido        | Prioridade | Status      |
 | ----------------------------------------------------------- | --------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------- | ----------------------- | ---------- | ----------- |
-| `[Bug] Usuário consegue acessar endpoint sem autenticação`  | Endpoint `/api/articles` retorna sucesso mesmo sem login. | 1. Acessar `/api/articles` sem autenticação.                                      | Retornar 401 Unauthorized         | Retorna 200 OK          | Alta       | 🔲 Pendente |
-| `[Bug] Senha não está sendo criptografada ao criar usuário` | Novo usuário é salvo com senha em texto plano.            | 1. Criar usuário via endpoint.<br>2. Verificar campo senha no banco.              | Senha criptografada usando BCrypt | Senha em texto plano    | Alta       | 🔲 Pendente |
-| `[Bug] Artigos RASCUNHO visíveis a outros usuários`         | Status RASCUNHO deveria ser restrito ao autor.            | 1. Criar artigo em RASCUNHO.<br>2. Logar com outro usuário.<br>3. Listar artigos. | RASCUNHO não visível              | Artigo aparece na lista | Alta       | 🔲 Pendente |
+| `[Bug] Usuário consegue acessar endpoint sem autenticação`  | Endpoint `/api/articles` retorna sucesso mesmo sem login. | 1. Acessar `/api/articles` sem autenticação.                                      | Retornar 401 Unauthorized         | Retorna 200 OK          | Alta       | ✅ Verificado - Não é bug |
+| `[Bug] Senha não está sendo criptografada ao criar usuário` | Novo usuário é salvo com senha em texto plano.            | 1. Criar usuário via endpoint.<br>2. Verificar campo senha no banco.              | Senha criptografada usando BCrypt | Senha em texto plano    | Alta       | ✅ Verificado - Não é bug |
+| `[Bug] Artigos RASCUNHO visíveis a outros usuários`         | Status RASCUNHO deveria ser restrito ao autor.            | 1. Criar artigo em RASCUNHO.<br>2. Logar com outro usuário.<br>3. Listar artigos. | RASCUNHO não visível              | Artigo aparece na lista | Alta       | ✅ Corrigido |
+
+**Observações sobre os bugs:**
+- **Bug 1**: O endpoint mencionado (`/api/articles`) não existe. O endpoint correto é `/verso/article` e está protegido corretamente pela autenticação.
+- **Bug 2**: A senha está sendo criptografada corretamente usando BCrypt no método `register` do `UserService`.
+- **Bug 3**: Corrigido no método `findById` do `ArticleService`. Agora verifica se o artigo é RASCUNHO antes de bloquear o acesso, permitindo que artigos PUBLICADOS sejam visualizados por todos os usuários autenticados.
 
 3️⃣ Melhorias iniciais (Enhancements)
 

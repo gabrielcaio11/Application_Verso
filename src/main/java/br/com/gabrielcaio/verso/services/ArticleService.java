@@ -37,18 +37,16 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public Page<ArticleResponseWithTitleAndStatusAndCategoryName> findAllArticles(
-            Pageable pageable
-    ) {
+            Pageable pageable) {
         var articlesPage = articleRepository.findAllByStatus(ArticleStatus.PUBLICADO, pageable);
         return articlesPage.map(articleMapper::toResponseWithTitleAndStatusAndCategoryName);
     }
 
     @Transactional(readOnly = true)
     public Page<ArticleResponseWithTitleAndStatusAndCategoryName> findAllArticlesRascunho(
-            Pageable pageable
-    ) {
+            Pageable pageable) {
         var currentUser = userService.getCurrentUser();
-        var articlesPage = articleRepository.findAllByStatusAndAuthor(ArticleStatus.RASCUNHO,currentUser, pageable);
+        var articlesPage = articleRepository.findAllByStatusAndAuthor(ArticleStatus.RASCUNHO, currentUser, pageable);
         return articlesPage.map(articleMapper::toResponseWithTitleAndStatusAndCategoryName);
     }
 
@@ -59,7 +57,8 @@ public class ArticleService {
 
         var currentUser = userService.getCurrentUser();
 
-        if (!article.getAuthor().getId().equals(currentUser.getId())) {
+        if (article.getStatus() == ArticleStatus.RASCUNHO &&
+                !article.getAuthor().getId().equals(currentUser.getId())) {
             throw new AccessDeniedException("Acesso negado a rascunhos de outros usuários");
         }
 
@@ -92,7 +91,8 @@ public class ArticleService {
         article.setStatus(newStatus);
         articleRepository.save(article);
 
-        // Criar notificações quando um artigo é publicado (transição de rascunho para publicado)
+        // Criar notificações quando um artigo é publicado (transição de rascunho para
+        // publicado)
         if (oldStatus == ArticleStatus.RASCUNHO && newStatus == ArticleStatus.PUBLICADO) {
             notificationService.createNotificationForFollowers(article);
         }
@@ -139,6 +139,7 @@ public class ArticleService {
 
         return articleMapper.toCreateResponse(article);
     }
+
     private Category cadastrarCategoria(String category) {
         if (categoryRepository.findByName(category).isPresent()) {
             return categoryRepository.findByName(category).get();
@@ -148,4 +149,3 @@ public class ArticleService {
         return categoryRepository.save(novaCategoria);
     }
 }
-
