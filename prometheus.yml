@@ -1,10 +1,15 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 5s
   evaluation_interval: 15s
 scrape_configs:
-  - job_name: 'verso_api'
+  - job_name: 'verso_application'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['api:8080']
+      - targets: ['app:8080']
         labels:
           application: 'verso'
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          application: 'prometheus'
