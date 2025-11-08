@@ -222,5 +222,5 @@ O projeto segue uma arquitetura em camadas:
 ## 📫 Contato
 
 - **LinkedIn**: [Gabriel Caio](https://www.linkedin.com/in/gabriel-caio/)
-
+* **Email:** [Gabriel Caio](mailto:gabri3lcaiodev@gmail.com)
 ---
