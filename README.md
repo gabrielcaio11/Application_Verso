@@ -1,10 +1,19 @@
 # Verso
 
+![Java](https://img.shields.io/badge/Java-21-red?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen?logo=springboot)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-Enabled-blue?logo=docker)
+![Swagger](https://img.shields.io/badge/Swagger-UI-green?logo=swagger)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+---
+
 ## 📋 Sobre o Projeto
 
-O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em Java com Spring Boot. A aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado em perfis de usuário (comum e administrador).
+O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em **Java 21** com **Spring Boot**. A aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado em perfis de usuário (comum e administrador).
 
-A plataforma foi projetada para facilitar o compartilhamento de conhecimento, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários, reações e favoritos) e notificações.
+A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários, reações e favoritos) e notificações.
 
 ## 🚀 Funcionalidades
 
@@ -93,32 +102,24 @@ A plataforma foi projetada para facilitar o compartilhamento de conhecimento, of
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
-- **Java 21** - Linguagem de programação
-- **Spring Boot 3.5.6** - Framework principal
-- **Spring Data JPA** - Persistência de dados
-- **Hibernate** - ORM
-- **Spring Security** - Segurança e autenticação
+- **Linguagem:** Java 21  
+- **Framework:** Spring Boot 3.5.6  
+- **Banco de Dados:** PostgreSQL 18 
+- **Segurança:** Spring Security
 - **Spring Web** - API REST
-- **Spring Validation** - Validação de dados
-
-### Banco de Dados
-- **PostgreSQL 18** - Banco de dados relacional
+- **ORM:** Spring Data JPA  
+- **Validações:** Bean Validation (Jakarta Validation)  
+- **Documentação:** Swagger / OpenAPI 3  
+- **Containerização:** Docker e Docker Compose  
+- **Monitoramento:** Actuator + Prometheus + Grafana 
+- **Testes:** JUnit 5 + Mockito  
+- **Gerenciamento de dependências:** Maven
 
 ### Ferramentas e Bibliotecas
 - **Lombok** - Redução de boilerplate
 - **MapStruct** - Mapeamento de objetos
 - **Springdoc OpenAPI** - Documentação da API
-- **Dotenv Java** - Gerenciamento de variáveis de ambiente
 - **BCrypt** - Criptografia de senhas
-
-### Testes
-- **JUnit 5** - Framework de testes
-- **Mockito** - Mocking para testes
-
-### DevOps
-- **Docker** - Containerização
-- **Docker Compose** - Orquestração de containers
-- **Maven** - Gerenciamento de dependências
 
 ## 📦 Pré-requisitos
 
@@ -137,34 +138,27 @@ SERVER_PORT=8080
 
 ### Usando Docker Compose
 
-1. Clone o repositório:
-    ```
-    git clone https://github.com/gabrielcaio11/Application_Verso.git
-    ```
-    ```
-    cd Application_Verso
-    ```
-2. Crie o arquivo `.env` com as variáveis de ambiente necessárias (veja seção Pré-requisitos)
+#### 1. Clone o repositório:
 
-3. Execute o Docker Compose para montar as imagens e subir os containers:
-    ```
-    docker compose up --build
-    ```
-4. Aguarde a aplicação iniciar. Você verá mensagens indicando que a aplicação está rodando.
+```
+git clone https://github.com/gabrielcaio11/Application_Verso.git
+```
+```
+cd Application_Verso
+```
 
-5. Acesse a aplicação:
-   - **API Base**: `http://localhost:8080`
-   - **Swagger UI**: `http://localhost:8080/swagger-ui.html`
-   - **OpenAPI Docs**: `http://localhost:8080/api-docs`
+#### 2. Crie o arquivo `.env` com as variáveis de ambiente necessárias (veja seção Pré-requisitos)
 
-### Banco de Dados
+#### 3. Execute o Docker Compose para montar as imagens e subir os containers:
+```
+docker compose up --build
+```
+#### 4. Aguarde a aplicação iniciar. Você verá mensagens indicando que a aplicação está rodando.
 
-O PostgreSQL estará disponível na porta `5433` (configurável no `docker-compose.yaml`).
-
-## 📚 Documentação da API
-
+#### 5. Acesse a aplicação:
 A documentação completa da API está disponível através do Swagger UI em:
-- **Swagger UI**: `http://localhost:8080/swagger-ui.html`
+
+- **Swagger UI**: [Acessar](<http://localhost:8080/swagger-ui.html>)
 
 A documentação inclui:
 - Todos os endpoints disponíveis
@@ -172,6 +166,24 @@ A documentação inclui:
 - Exemplos de uso
 - Códigos de status HTTP
 - Possibilidade de testar os endpoints diretamente pela interface
+
+##### 📊 Monitoramento
+
+O projeto será integrado com **Prometheus** e **Grafana** para coleta e visualização de métricas:
+
+- Requisições por segundo  
+- Tempo médio de resposta  
+- Erros (4xx / 5xx)  
+- Uso de CPU e memória  
+
+##### 📈 Dashboard Grafana
+
+Você pode visualizar as métricas da aplicação no painel do Grafana:
+
+🔗 **Dashboard Verso:** [Acessar](<http://localhost:3000/>)
+
+
+
 
 ## 🏗️ Arquitetura
 
