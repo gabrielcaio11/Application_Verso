@@ -31,6 +31,13 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/verso/users/register").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/api-docs/**",
+                                "/webjars/**"
+                                ).permitAll()
                         .anyRequest().authenticated())
                 .userDetailsService(userDetailsService)
                 .httpBasic(Customizer.withDefaults())
@@ -38,15 +45,15 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring()
-                .requestMatchers("/swagger-ui/**")
-                .requestMatchers("/swagger-ui.html")
-                .requestMatchers("/v3/api-docs/**")
-                .requestMatchers("/api-docs/**")
-                .requestMatchers("/webjars/**");
-    }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer() {
+//        return (web) -> web.ignoring()
+//                .requestMatchers("/swagger-ui/**")
+//                .requestMatchers("/swagger-ui.html")
+//                .requestMatchers("/v3/api-docs/**")
+//                .requestMatchers("/api-docs/**")
+//                .requestMatchers("/webjars/**");
+//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
