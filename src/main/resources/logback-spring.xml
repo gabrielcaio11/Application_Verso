@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
 
-    <!-- Define a codificação padrão -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} [%thread] %-5level %logger{36} - %msg%n" />
+    <springProperty scope="context" name="springAppName" source="spring.application.name" defaultValue="verso"/>
 
-    <!-- Encoder JSON -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <!-- Adiciona campos personalizados -->
-            <customFields>{"application":"verso-api","environment":"${spring.profiles.active:-local}"}</customFields>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <fieldName>timestamp</fieldName>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "level": "%level",
+                        "thread": "%thread",
+                        "logger": "%logger{36}",
+                        "traceId": "%X{traceId:-}",
+                        "spanId": "%X{spanId:-}",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
         </encoder>
     </appender>
 
-    <!-- Nível de log padrão -->
     <root level="INFO">
-        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="CONSOLE"/>
     </root>
-
-    <!-- Configuração opcional para logs específicos -->
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="org.hibernate.SQL" level="WARN"/>
-    <logger name="br.com.verso" level="DEBUG"/>
-
 </configuration>
