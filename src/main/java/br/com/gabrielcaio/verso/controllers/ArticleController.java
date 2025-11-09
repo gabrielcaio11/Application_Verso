@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/verso/article")
 @RequiredArgsConstructor
 @Tag(name = "Article", description = "Endpoints para gerenciamento de artigos")
+@Slf4j
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -53,7 +55,9 @@ public class ArticleController {
                     content = @Content(schema = @Schema(implementation = CreateArticleRequestDTO.class))
             )
             @Valid @org.springframework.web.bind.annotation.RequestBody CreateArticleRequestDTO dto) {
+        log.info("Recebida requisição para criar artigo com título: {}", dto.getTitle());
         var entity = articleService.create(dto);
+        log.info("Artigo criado com sucesso.");
         return ResponseEntity.ok(entity);
     }
 
@@ -75,7 +79,9 @@ public class ArticleController {
             @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
+        log.info("Buscando todos os artigos publicados. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = articleService.findAllArticles(pageable);
+        log.info("Total de artigos encontrados: {}", pageResponse.getTotalElements());
         return ResponseEntity.ok(pageResponse);
     }
 
@@ -97,7 +103,9 @@ public class ArticleController {
             @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
+        log.info("Buscando rascunhos do usuário autenticado. Página: {}", pageable.getPageNumber());
         var pageResponse = articleService.findAllArticlesRascunho(pageable);
+        log.info("Total de rascunhos encontrados: {}", pageResponse.getTotalElements());
         return ResponseEntity.ok(pageResponse);
     }
 
@@ -121,7 +129,9 @@ public class ArticleController {
             @Parameter(description = "ID do artigo", example = "1", required = true)
             @PathVariable Long id
     ) {
+        log.info("Buscando artigo por ID: {}", id);
         var response = articleService.findById(id);
+        log.info("Artigo encontrado: {}", response.getTitle());
         return ResponseEntity.ok(response);
     }
 
@@ -153,7 +163,9 @@ public class ArticleController {
             )
             @Valid @org.springframework.web.bind.annotation.RequestBody UpdateArticleRequestDTO dto
     ) {
+        log.info("Atualizando artigo ID: {} com novos dados", id);
         var response = articleService.update(id, dto);
+        log.info("Artigo ID: {} atualizado com sucesso", id);
         return ResponseEntity.ok(response);
     }
 
@@ -173,7 +185,9 @@ public class ArticleController {
             @Parameter(description = "ID do artigo", example = "1", required = true)
             @PathVariable Long id
     ) {
+        log.warn("Requisição para deletar artigo ID: {}", id);
         articleService.delete(id);
+        log.info("Artigo ID: {} deletado com sucesso", id);
         return ResponseEntity.noContent().build();
     }
 }
