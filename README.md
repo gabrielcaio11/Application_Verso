@@ -15,6 +15,24 @@ O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvo
 
 A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários, reações e favoritos) e notificações.
 
+---
+
+### 📄 Sumário
+
+- [🚀 Funcionalidades](#funcionalidades)
+- [🛠️ Tecnologias Utilizadas](#️tecnologias-utilizadas)
+- [📦 Pré-requisitos](#pre-requisitos)
+- [🚀 Como Executar](#como-executar)
+- [🏗️ Arquitetura](#arquitetura)
+- [🔐 Segurança](#seguranca)
+- [📝 Regras de Negócio Principais](#regras-de-negocio-principais)
+- [🔮 Implementações Futuras](#implementacoes-futuras)
+- [📈 Monitoramento (Prometheu + Grafana)](#monitoramento-prometheus-grafana)
+- [📫 Contato](#contato)
+
+---
+
+<a id="funcionalidades"></a>
 ## 🚀 Funcionalidades
 
 ### Funcionalidades Principais
@@ -99,6 +117,9 @@ A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**
   - Apenas artigos publicados podem receber reações
   - Cada usuário pode ter apenas uma reação por artigo (atualizável)
 
+---
+
+<a id="tecnologias-utilizadas"></a>
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
@@ -121,6 +142,7 @@ A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**
 - **Springdoc OpenAPI** - Documentação da API
 - **BCrypt** - Criptografia de senhas
 
+<a id="pre-requisitos"></a>
 ## 📦 Pré-requisitos
 
 - `Docker` instalado na máquina
@@ -134,6 +156,7 @@ POSTGRES_USER=user_db
 POSTGRES_PASSWORD=password_db
 SERVER_PORT=8080
 ```
+<a id="como-executar"></a>
 ## 🚀 Como Executar
 
 ### Usando Docker Compose
@@ -167,7 +190,8 @@ A documentação inclui:
 - Códigos de status HTTP
 - Possibilidade de testar os endpoints diretamente pela interface
 
-##### 📊 Monitoramento
+<a id="monitoramento-prometheus-grafana"></a>
+## 📊 Monitoramento 
 
 O projeto será integrado com **Prometheus** e **Grafana** para coleta e visualização de métricas:
 
@@ -184,7 +208,7 @@ Você pode visualizar as métricas da aplicação no painel do Grafana:
 
 
 
-
+<a id="arquitetura"></a>
 ## 🏗️ Arquitetura
 
 O projeto segue uma arquitetura em camadas:
@@ -199,6 +223,7 @@ O projeto segue uma arquitetura em camadas:
 - **Security** - Configurações de segurança
 - **Config** - Configurações da aplicação
 
+<a id="seguranca"></a>
 ## 🔐 Segurança
 
 - Autenticação HTTP Basic
@@ -207,6 +232,7 @@ O projeto segue uma arquitetura em camadas:
 - Endpoints protegidos por autenticação
 - Validação de dados de entrada
 
+<a id="regras-de-negocio-principais"></a>
 ## 📝 Regras de Negócio Principais
 
 - Cada usuário possui um email único
@@ -218,6 +244,7 @@ O projeto segue uma arquitetura em camadas:
 - Apenas artigos publicados podem receber reações e comentários
 - Cada usuário pode ter apenas uma reação por artigo (atualizável)
 
+<a id="implementacoes-futuras"></a>
 ## 🔮 Implementações Futuras
 
 - **Upload de Imagens** - Inclusão de mídia nos artigos
@@ -231,6 +258,7 @@ O projeto segue uma arquitetura em camadas:
 - **Autenticação JWT** - Substituir HTTP Basic por tokens JWT
 - **API Rate Limiting** - Limitação de requisições por usuário
 
+<a id="contato"></a>
 ## 📫 Contato
 
 - **LinkedIn**: [Gabriel Caio](https://www.linkedin.com/in/gabriel-caio/)
