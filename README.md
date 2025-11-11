@@ -20,7 +20,7 @@ A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**
 ### 📄 Sumário
 
 - [🚀 Funcionalidades](#funcionalidades)
-- [🛠️ Tecnologias Utilizadas](#️tecnologias-utilizadas)
+- [🛠️ Tecnologias Utilizadas](#tecnologias-utilizadas)
 - [📦 Pré-requisitos](#pre-requisitos)
 - [🚀 Como Executar](#como-executar)
 - [🏗️ Arquitetura](#arquitetura)
