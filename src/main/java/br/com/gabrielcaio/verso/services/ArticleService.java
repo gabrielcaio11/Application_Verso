@@ -4,10 +4,7 @@ import br.com.gabrielcaio.verso.controllers.error.DataBaseException;
 import br.com.gabrielcaio.verso.controllers.error.ResourceNotFoundException;
 import br.com.gabrielcaio.verso.domain.entity.Category;
 import br.com.gabrielcaio.verso.domain.enums.ArticleStatus;
-import br.com.gabrielcaio.verso.dtos.ArticleResponseWithTitleAndStatusAndCategoryName;
-import br.com.gabrielcaio.verso.dtos.CreateArticleRequestDTO;
-import br.com.gabrielcaio.verso.dtos.CreateArticleResponseDTO;
-import br.com.gabrielcaio.verso.dtos.UpdateArticleRequestDTO;
+import br.com.gabrielcaio.verso.dtos.*;
 import br.com.gabrielcaio.verso.mappers.ArticleMapper;
 import br.com.gabrielcaio.verso.repositories.ArticleRepository;
 import br.com.gabrielcaio.verso.repositories.CategoryRepository;
@@ -18,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +25,7 @@ public class ArticleService {
     private final UserService userService;
     private final ArticleRepository articleRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
     private final ArticleMapper articleMapper;
     private final ArticleUpdateValidator articleUpdateValidator;
     private final ArticleCreateValidator articleCreateValidator;
@@ -36,7 +33,7 @@ public class ArticleService {
     private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
-    public Page<ArticleResponseWithTitleAndStatusAndCategoryName> findAllArticles(
+    public Page<ArticleResponseWithTitleAndStatusAndCategoryName> findAllArticlesPublicados(
             Pageable pageable) {
         var articlesPage = articleRepository.findAllByStatus(ArticleStatus.PUBLICADO, pageable);
         return articlesPage.map(articleMapper::toResponseWithTitleAndStatusAndCategoryName);
@@ -52,17 +49,20 @@ public class ArticleService {
 
     @Transactional(readOnly = true)
     public ArticleResponseWithTitleAndStatusAndCategoryName findById(Long id) {
+
         var article = articleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado"));
 
-        var currentUser = userService.getCurrentUser();
-
-        if (article.getStatus() == ArticleStatus.RASCUNHO &&
-                !article.getAuthor().getId().equals(currentUser.getId())) {
-            throw new AccessDeniedException("Acesso negado a rascunhos de outros usuários");
+        if (article.getStatus() == ArticleStatus.PUBLICADO) {
+            return articleMapper.toResponseWithTitleAndStatusAndCategoryName(article);
         }
-
-        return articleMapper.toResponseWithTitleAndStatusAndCategoryName(article);
+        if (article.getStatus() == ArticleStatus.RASCUNHO) {
+            var currentUser = userService.getCurrentUser();
+            if (article.getAuthor().getId().equals(currentUser.getId())) {
+                return articleMapper.toResponseWithTitleAndStatusAndCategoryName(article);
+            }
+        }
+        throw new ResourceNotFoundException("O Autor não tem artigo com esse id");
     }
 
     @Transactional
@@ -91,8 +91,6 @@ public class ArticleService {
         article.setStatus(newStatus);
         articleRepository.save(article);
 
-        // Criar notificações quando um artigo é publicado (transição de rascunho para
-        // publicado)
         if (oldStatus == ArticleStatus.RASCUNHO && newStatus == ArticleStatus.PUBLICADO) {
             notificationService.createNotificationForFollowers(article);
         }
@@ -132,7 +130,6 @@ public class ArticleService {
 
         article = articleRepository.save(article);
 
-        // Criar notificações se o artigo foi criado como publicado
         if (article.getStatus() == ArticleStatus.PUBLICADO) {
             notificationService.createNotificationForFollowers(article);
         }
@@ -141,11 +138,8 @@ public class ArticleService {
     }
 
     private Category cadastrarCategoria(String category) {
-        if (categoryRepository.findByName(category).isPresent()) {
-            return categoryRepository.findByName(category).get();
-        }
-        var novaCategoria = new Category();
-        novaCategoria.setName(category);
-        return categoryRepository.save(novaCategoria);
+        var categoryDTO = categoryService.create(new CreateCategoryRequestDTO(category));
+        return categoryRepository.findById(categoryDTO.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada após criação"));
     }
 }

@@ -11,11 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/verso/follows")
 @RequiredArgsConstructor
 @Tag(name = "Follows", description = "Endpoints para gerenciamento de seguidores")
+@Slf4j
 public class FollowController {
 
     private final FollowService followService;
@@ -48,7 +50,9 @@ public class FollowController {
             @Parameter(description = "ID do usuário a ser seguido", example = "1", required = true)
             @PathVariable Long userId
     ) {
+        log.info("Request to follow user with ID: {}", userId);
         var response = followService.followUser(userId);
+        log.info("Successfully followed user with ID: {}", userId);
         return ResponseEntity.ok(response);
     }
 
@@ -67,7 +71,9 @@ public class FollowController {
             @Parameter(description = "ID do usuário a ser deixado de seguir", example = "1", required = true)
             @PathVariable Long userId
     ) {
+        log.info("Request to unfollow user with ID: {}", userId);
         followService.unfollowUser(userId);
+        log.info("Successfully unfollowed user with ID: {}", userId);
         return ResponseEntity.noContent().build();
     }
 
@@ -89,8 +95,10 @@ public class FollowController {
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
+        log.info("Buscando lista de quem o usuário autenticado segue. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = followService.getFollowing(pageable);
-        return ResponseEntity.ok(pageResponse);
+        log.info("Lista de usuários seguidos retornada com sucesso. Total de elementos: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
     }
 
     @Operation(
@@ -111,8 +119,10 @@ public class FollowController {
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
+        log.info("Buscando lista de seguidores do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = followService.getFollowers(pageable);
-        return ResponseEntity.ok(pageResponse);
+        log.info("Lista de seguidores retornada com sucesso. Total de elementos: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
     }
 
     @Operation(
@@ -134,8 +144,10 @@ public class FollowController {
             @Parameter(description = "ID do usuário", example = "1", required = true)
             @PathVariable Long userId
     ) {
+        log.info("Buscando perfil do usuário com ID: {}", userId);
         var profile = followService.getUserProfile(userId);
-        return ResponseEntity.ok(profile);
+        log.info("Perfil do usuário com ID: {} retornado com sucesso", userId);
+        return ResponseEntity.status(HttpStatus.FOUND).body(profile);
     }
 
     @Operation(
@@ -156,7 +168,9 @@ public class FollowController {
             @Parameter(description = "ID do usuário", example = "1", required = true)
             @PathVariable Long userId
     ) {
+        log.info("Verificando se o usuário autenticado está seguindo o usuário com ID: {}", userId);
         boolean isFollowing = followService.isFollowing(userId);
-        return ResponseEntity.ok(isFollowing);
+        log.info("Status de seguimento para o usuário com ID: {} é {}", userId, isFollowing);
+        return ResponseEntity.status(HttpStatus.OK).body(isFollowing);
     }
 }

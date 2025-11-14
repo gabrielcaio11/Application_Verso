@@ -12,25 +12,25 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "DTO de resposta para criação de artigo")
 public class CreateArticleResponseDTO {
-    
+
     @Schema(
-        description = "Título do artigo criado",
-        example = "Introdução ao Spring Boot",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Título do artigo criado",
+            example = "Introdução ao Spring Boot",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String title;
-    
+
     @Schema(
-        description = "Conteúdo do artigo criado",
-        example = "Spring Boot é um framework que facilita o desenvolvimento de aplicações Java...",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Conteúdo do artigo criado",
+            example = "Spring Boot é um framework que facilita o desenvolvimento de aplicações Java...",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String content;
-    
+
     @Schema(
-        description = "Nome da categoria do artigo",
-        example = "Tecnologia",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Nome da categoria do artigo",
+            example = "Tecnologia",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String category;
 }

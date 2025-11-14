@@ -10,10 +10,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/verso/favorites")
 @RequiredArgsConstructor
 @Tag(name = "Favorites", description = "Endpoints para gerenciamento de favoritos")
+@Slf4j
 public class FavoriteController {
 
     private final FavoriteService favoriteService;
@@ -46,8 +49,10 @@ public class FavoriteController {
             @Parameter(description = "ID do artigo", example = "1", required = true)
             @PathVariable Long articleId
     ) {
+        log.info("Adicionando artigo ID {} aos favoritos", articleId);
         var response = favoriteService.addFavorite(articleId);
-        return ResponseEntity.ok(response);
+        log.info("Artigo ID {} adicionado aos favoritos com sucesso", articleId);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(
@@ -65,8 +70,10 @@ public class FavoriteController {
             @Parameter(description = "ID do artigo", example = "1", required = true)
             @PathVariable Long articleId
     ) {
+        log.info("Removendo artigo ID {} dos favoritos", articleId);
         favoriteService.removeFavorite(articleId);
-        return ResponseEntity.noContent().build();
+        log.info("Artigo ID {} removido dos favoritos com sucesso", articleId);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(
@@ -87,8 +94,10 @@ public class FavoriteController {
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
+        log.info("Buscando artigos favoritados do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = favoriteService.findAllFavorites(pageable);
-        return ResponseEntity.ok(pageResponse);
+        log.info("Total de artigos favoritados encontrados: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
     }
 
     @Operation(
@@ -108,7 +117,9 @@ public class FavoriteController {
             @Parameter(description = "ID do artigo", example = "1", required = true)
             @PathVariable Long articleId
     ) {
+        log.info("Verificando se o artigo ID {} está nos favoritos", articleId);
         boolean isFavorite = favoriteService.isFavorite(articleId);
-        return ResponseEntity.ok(isFavorite);
+        log.info("Artigo ID {} está nos favoritos: {}", articleId, isFavorite);
+        return ResponseEntity.status(HttpStatus.OK).body(isFavorite);
     }
 }

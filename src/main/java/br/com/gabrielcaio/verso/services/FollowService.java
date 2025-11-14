@@ -107,7 +107,7 @@ public class FollowService {
         long followersCount = followRepository.countByFollowing(user);
         long followingCount = followRepository.countByFollower(user);
         boolean isFollowing = followRepository.existsByFollowerAndFollowing(currentUser, user);
-        
+
         return new UserProfileDTO(
                 user.getId(),
                 user.getUsername(),

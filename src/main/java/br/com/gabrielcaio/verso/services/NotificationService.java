@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class NotificationService {
-    
+
     private final NotificationRepository notificationRepository;
     private final FollowRepository followRepository;
     private final UserService userService;
@@ -28,10 +28,10 @@ public class NotificationService {
     public void createNotificationForFollowers(Article article) {
         User author = article.getAuthor();
         List<User> followers = followRepository.findFollowersByFollowing(author, Pageable.unpaged()).getContent();
-        
-        String message = String.format("%s publicou um novo artigo: %s", 
+
+        String message = String.format("%s publicou um novo artigo: %s",
                 author.getUsername(), article.getTitle());
-        
+
         for (User follower : followers) {
             Notification notification = new Notification();
             notification.setUser(follower);
@@ -46,7 +46,7 @@ public class NotificationService {
     public Page<NotificationResponseDTO> getAllNotifications(Pageable pageable) {
         var currentUser = userService.getCurrentUser();
         var notificationsPage = notificationRepository.findAllByUserOrderByCreatedAtDesc(currentUser, pageable);
-        
+
         return notificationsPage.map(this::toDto);
     }
 
@@ -55,7 +55,7 @@ public class NotificationService {
         var currentUser = userService.getCurrentUser();
         var notificationsPage = notificationRepository.findAllByUserAndReadOrderByCreatedAtDesc(
                 currentUser, false, pageable);
-        
+
         return notificationsPage.map(this::toDto);
     }
 
@@ -64,11 +64,11 @@ public class NotificationService {
         var currentUser = userService.getCurrentUser();
         var notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Notificação não encontrada"));
-        
+
         if (!notification.getUser().getId().equals(currentUser.getId())) {
             throw new ResourceNotFoundException("Notificação não encontrada");
         }
-        
+
         notificationRepository.markAsRead(notificationId, currentUser);
     }
 

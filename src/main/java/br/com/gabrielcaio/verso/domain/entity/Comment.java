@@ -33,7 +33,7 @@ public class Comment {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_article"))
     private Article article;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "fk_comment_parent"))
     private Comment parent;

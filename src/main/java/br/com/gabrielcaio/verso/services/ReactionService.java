@@ -4,7 +4,6 @@ import br.com.gabrielcaio.verso.controllers.error.BusinessException;
 import br.com.gabrielcaio.verso.controllers.error.ResourceNotFoundException;
 import br.com.gabrielcaio.verso.domain.entity.Article;
 import br.com.gabrielcaio.verso.domain.entity.Reaction;
-import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.domain.enums.ArticleStatus;
 import br.com.gabrielcaio.verso.domain.enums.ReactionType;
 import br.com.gabrielcaio.verso.dtos.ArticleReactionStatsDTO;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

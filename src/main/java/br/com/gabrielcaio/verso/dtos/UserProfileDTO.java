@@ -12,46 +12,46 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "DTO com informações básicas do perfil de usuário")
 public class UserProfileDTO {
-    
+
     @Schema(
-        description = "ID do usuário",
-        example = "1",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "ID do usuário",
+            example = "1",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private Long id;
-    
+
     @Schema(
-        description = "Username do usuário",
-        example = "joao",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Username do usuário",
+            example = "joao",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String username;
-    
+
     @Schema(
-        description = "Email do usuário",
-        example = "joao@example.com",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Email do usuário",
+            example = "joao@example.com",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private String email;
-    
+
     @Schema(
-        description = "Número de seguidores",
-        example = "10",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Número de seguidores",
+            example = "10",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private Long followersCount;
-    
+
     @Schema(
-        description = "Número de pessoas que o usuário está seguindo",
-        example = "5",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Número de pessoas que o usuário está seguindo",
+            example = "5",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private Long followingCount;
-    
+
     @Schema(
-        description = "Se o usuário autenticado está seguindo este usuário",
-        example = "true",
-        requiredMode = Schema.RequiredMode.REQUIRED
+            description = "Se o usuário autenticado está seguindo este usuário",
+            example = "true",
+            requiredMode = Schema.RequiredMode.REQUIRED
     )
     private Boolean isFollowing;
 }

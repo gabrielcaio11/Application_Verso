@@ -19,7 +19,7 @@ public class UserDataLoader implements CommandLineRunner {
 
     public UserDataLoader(
             UserRepository userRepository,
-            RolesRepository rolesRepository, 
+            RolesRepository rolesRepository,
             PasswordEncoder passwordEncoder
     ) {
         this.userRepository = userRepository;
@@ -32,12 +32,12 @@ public class UserDataLoader implements CommandLineRunner {
         userRepository.deleteAll();
         rolesRepository.deleteAll();
 
-        if (!rolesRepository.existsByName("USER")) {
+        if (rolesRepository.existsByName("USER")) {
             Roles role_user = new Roles();
             role_user.setName("USER");
             rolesRepository.save(role_user);
         }
-        if (!rolesRepository.existsByName("ADMIN")) {
+        if (rolesRepository.existsByName("ADMIN")) {
             Roles role_admin = new Roles();
             role_admin.setName("ADMIN");
             rolesRepository.save(role_admin);

@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,11 +55,12 @@ public class ArticleController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = CreateArticleRequestDTO.class))
             )
-            @Valid @org.springframework.web.bind.annotation.RequestBody CreateArticleRequestDTO dto) {
+            @Valid @org.springframework.web.bind.annotation.RequestBody CreateArticleRequestDTO dto
+    ) {
         log.info("Recebida requisição para criar artigo com título: {}", dto.getTitle());
         var entity = articleService.create(dto);
         log.info("Artigo criado com sucesso.");
-        return ResponseEntity.ok(entity);
+        return ResponseEntity.status(HttpStatus.CREATED).body(entity);
     }
 
     @Operation(
@@ -75,14 +77,14 @@ public class ArticleController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @GetMapping
-    public ResponseEntity<Page<ArticleResponseWithTitleAndStatusAndCategoryName>> findAll(
-            @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
+    public ResponseEntity<Page<ArticleResponseWithTitleAndStatusAndCategoryName>> findAllPublicados(
+            @PageableDefault(page = 0, size = 10, sort = "likesCount", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
         log.info("Buscando todos os artigos publicados. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
-        var pageResponse = articleService.findAllArticles(pageable);
+        var pageResponse = articleService.findAllArticlesPublicados(pageable);
         log.info("Total de artigos encontrados: {}", pageResponse.getTotalElements());
-        return ResponseEntity.ok(pageResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
     }
 
     @Operation(
@@ -100,13 +102,13 @@ public class ArticleController {
     })
     @GetMapping("/rascunhos")
     public ResponseEntity<Page<ArticleResponseWithTitleAndStatusAndCategoryName>> findAllRascunhos(
-            @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
+            @PageableDefault(page = 0, size = 10, sort = "likesCount", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        log.info("Buscando rascunhos do usuário autenticado. Página: {}", pageable.getPageNumber());
+        log.info("Buscando rascunhos do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = articleService.findAllArticlesRascunho(pageable);
         log.info("Total de rascunhos encontrados: {}", pageResponse.getTotalElements());
-        return ResponseEntity.ok(pageResponse);
+        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
     }
 
     @Operation(
@@ -132,7 +134,7 @@ public class ArticleController {
         log.info("Buscando artigo por ID: {}", id);
         var response = articleService.findById(id);
         log.info("Artigo encontrado: {}", response.getTitle());
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @Operation(
@@ -166,7 +168,7 @@ public class ArticleController {
         log.info("Atualizando artigo ID: {} com novos dados", id);
         var response = articleService.update(id, dto);
         log.info("Artigo ID: {} atualizado com sucesso", id);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(
@@ -188,6 +190,6 @@ public class ArticleController {
         log.warn("Requisição para deletar artigo ID: {}", id);
         articleService.delete(id);
         log.info("Artigo ID: {} deletado com sucesso", id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

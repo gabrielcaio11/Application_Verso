@@ -2,9 +2,7 @@ package br.com.gabrielcaio.verso.services;
 
 import br.com.gabrielcaio.verso.controllers.error.BusinessException;
 import br.com.gabrielcaio.verso.controllers.error.ResourceNotFoundException;
-import br.com.gabrielcaio.verso.domain.entity.Article;
 import br.com.gabrielcaio.verso.domain.entity.Favorite;
-import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.domain.enums.ArticleStatus;
 import br.com.gabrielcaio.verso.dtos.FavoriteResponseDTO;
 import br.com.gabrielcaio.verso.repositories.ArticleRepository;
@@ -18,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class FavoriteService {
-    
+
     private final FavoriteRepository favoriteRepository;
     private final ArticleRepository articleRepository;
     private final UserService userService;
@@ -50,7 +48,7 @@ public class FavoriteService {
     @Transactional
     public void removeFavorite(Long articleId) {
         var currentUser = userService.getCurrentUser();
-        
+
         if (!favoriteRepository.existsByUserAndArticleId(currentUser, articleId)) {
             throw new ResourceNotFoundException("Artigo não encontrado nos seus favoritos");
         }
@@ -62,11 +60,11 @@ public class FavoriteService {
     public Page<FavoriteResponseDTO> findAllFavorites(Pageable pageable) {
         var currentUser = userService.getCurrentUser();
         var favoritesPage = favoriteRepository.findAllByUserAndArticleStatus(
-                currentUser, 
-                ArticleStatus.PUBLICADO, 
+                currentUser,
+                ArticleStatus.PUBLICADO,
                 pageable
         );
-        
+
         return favoritesPage.map(this::toDto);
     }
 

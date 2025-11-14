@@ -28,8 +28,8 @@ public class ArticleReactionStatsDTO {
     private Map<String, Long> reactionsByType;
 
     @Schema(
-        description = "Tipo de reação do usuário autenticado (null se não reagiu)",
-        example = "LIKE"
+            description = "Tipo de reação do usuário autenticado (null se não reagiu)",
+            example = "LIKE"
     )
     private String userReaction;
 }

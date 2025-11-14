@@ -10,12 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "Representação de uma categoria")
-public class CategoryDTO {
-
-    @Schema(description = "ID único da categoria", example = "1")
-    private Long id;
-
+@Schema(description = "Representação de um response de categoria")
+public class CategoryResponseWithNameDTO {
     @Schema(description = "Nome da categoria", example = "Tecnologia", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 }

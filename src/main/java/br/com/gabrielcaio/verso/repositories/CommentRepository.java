@@ -11,8 +11,12 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByArticleAndParentIsNullOrderByCreatedAtAsc(Article article, Pageable pageable);
+
     List<Comment> findByParentOrderByCreatedAtAsc(Comment parent);
+
     Page<Comment> findByArticleOrderByCreatedAtAsc(Article article, Pageable pageable);
+
     boolean existsByIdAndAuthor(Long id, User author);
+
     long countByArticle(Article article);
 }

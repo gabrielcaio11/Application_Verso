@@ -1,6 +1,6 @@
 package br.com.gabrielcaio.verso.controllers;
 
-import br.com.gabrielcaio.verso.dtos.CategoryDTO;
+import br.com.gabrielcaio.verso.dtos.CategoryResponseWithNameDTO;
 import br.com.gabrielcaio.verso.dtos.CreateCategoryRequestDTO;
 import br.com.gabrielcaio.verso.dtos.UpdateCategoryRequestDTO;
 import br.com.gabrielcaio.verso.services.CategoryService;
@@ -14,11 +14,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +29,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/verso/categories")
 @RequiredArgsConstructor
 @Tag(name = "Category", description = "Endpoints para gerenciamento de categorias (apenas ADMIN)")
+@Slf4j
 public class CategoryController {
 
-    private final CategoryService service;
+    private final CategoryService categoryService;
 
     @Operation(
             summary = "Listar todas as categorias",
@@ -40,17 +42,20 @@ public class CategoryController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de categorias retornada com sucesso",
-                    content = @Content(schema = @Schema(implementation = CategoryDTO.class))
+                    content = @Content(schema = @Schema(implementation = CategoryResponseWithNameDTO.class))
             ),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @GetMapping
-    public ResponseEntity<Page<CategoryDTO>> findAll(
-        @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
-        Pageable pageable
+    public ResponseEntity<Page<CategoryResponseWithNameDTO>> findAll(
+            @PageableDefault(page = 0, size = 10, sort = "name", direction = Sort.Direction.DESC)
+            Pageable pageable
     ) {
-        return ResponseEntity.ok(service.listAll(pageable));
+        log.info("Buscando todas as categorias. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+        var pageResponse = categoryService.findAll(pageable);
+        log.info("Total de categorias encontradas: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
     }
 
     @Operation(
@@ -61,17 +66,21 @@ public class CategoryController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Categoria encontrada",
-                    content = @Content(schema = @Schema(implementation = CategoryDTO.class))
+                    content = @Content(schema = @Schema(implementation = CategoryResponseWithNameDTO.class))
             ),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "404", description = "Categoria não encontrada"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> findById(
+    public ResponseEntity<CategoryResponseWithNameDTO> findById(
             @Parameter(description = "ID da categoria", example = "1", required = true)
-            @PathVariable Long id) {
-        return ResponseEntity.ok(service.getById(id));
+            @PathVariable Long id
+    ) {
+        log.info("Buscando categoria por ID: {}", id);
+        var response = categoryService.findById(id);
+        log.info("Artigo encontrado: {}", response.getName());
+        return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @Operation(
@@ -82,7 +91,7 @@ public class CategoryController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Categoria criada com sucesso",
-                    content = @Content(schema = @Schema(implementation = CategoryDTO.class))
+                    content = @Content(schema = @Schema(implementation = CategoryResponseWithNameDTO.class))
             ),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
@@ -92,14 +101,17 @@ public class CategoryController {
     })
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    public ResponseEntity<CategoryDTO> create(
+    public ResponseEntity<CategoryResponseWithNameDTO> create(
             @RequestBody(
                     description = "Dados da categoria a ser criada",
                     required = true,
                     content = @Content(schema = @Schema(implementation = CreateCategoryRequestDTO.class))
             )
-            @Valid @org.springframework.web.bind.annotation.RequestBody CreateCategoryRequestDTO request) {
-        return ResponseEntity.ok(service.create(request));
+            @Valid @org.springframework.web.bind.annotation.RequestBody CreateCategoryRequestDTO dto) {
+        log.info("Recebida requisição para criar categoria com nome: {}", dto.getName());
+        var response = categoryService.create(dto);
+        log.info("Artigo criado com sucesso.");
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @Operation(
@@ -110,7 +122,7 @@ public class CategoryController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Categoria atualizada com sucesso",
-                    content = @Content(schema = @Schema(implementation = CategoryDTO.class))
+                    content = @Content(schema = @Schema(implementation = CategoryResponseWithNameDTO.class))
             ),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
@@ -119,9 +131,10 @@ public class CategoryController {
             @ApiResponse(responseCode = "422", description = "Erro de validação - nome de categoria já existe"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> update(
+    public ResponseEntity<CategoryResponseWithNameDTO> update(
             @Parameter(description = "ID da categoria", example = "1", required = true)
             @PathVariable Long id,
             @RequestBody(
@@ -129,8 +142,12 @@ public class CategoryController {
                     required = true,
                     content = @Content(schema = @Schema(implementation = UpdateCategoryRequestDTO.class))
             )
-            @Valid @org.springframework.web.bind.annotation.RequestBody UpdateCategoryRequestDTO request) {
-        return ResponseEntity.ok(service.update(id, request));
+            @Valid @org.springframework.web.bind.annotation.RequestBody UpdateCategoryRequestDTO dto
+    ) {
+        log.info("Atualizando categoria ID: {} com novos dados", id);
+        var response = categoryService.update(id, dto);
+        log.info("Artigo ID: {} atualizado com sucesso", id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(
@@ -149,8 +166,11 @@ public class CategoryController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID da categoria", example = "1", required = true)
-            @PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
+            @PathVariable Long id
+    ) {
+        log.warn("Requisição para deletar categoria ID: {}", id);
+        categoryService.delete(id);
+        log.info("Categoria ID: {} deletado com sucesso", id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

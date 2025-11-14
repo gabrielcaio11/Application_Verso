@@ -11,13 +11,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -25,6 +30,7 @@ import java.util.List;
 @RequestMapping("/verso/users")
 @RequiredArgsConstructor
 @Tag(name = "User", description = "Endpoints para gerenciamento de usuários")
+@Slf4j
 public class UserController {
 
     private final UserService userService;
@@ -47,8 +53,10 @@ public class UserController {
                     content = @Content(schema = @Schema(implementation = UserDTO.class))
             )
             @Valid @org.springframework.web.bind.annotation.RequestBody UserDTO dto) {
+        log.info("Registrando novo usuário com email: {}", dto.getEmail());
         userService.register(dto);
-        return ResponseEntity.status(201).build();
+        log.info("Usuário registrado com sucesso com email: {}", dto.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @Operation(
@@ -71,7 +79,9 @@ public class UserController {
             @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
             Pageable pageable
     ) {
-        var users = userService.findAll(pageable);
-        return ResponseEntity.ok(users);
+        log.info("Buscando todos os usuários. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+        var pageResponse = userService.findAll(pageable);
+        log.info("Total de usuários encontrados: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 }

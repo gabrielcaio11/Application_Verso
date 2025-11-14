@@ -17,7 +17,7 @@ public class ArticleCreateValidator {
                 author.getId(), article.getTitle());
         if (exists) {
             throw new IllegalArgumentException(
-                    "Author(" + author.getUsername()+ ") já possui um artigo com esse título");
+                    "Author(" + author.getUsername() + ") já possui um artigo com esse título");
         }
     }
 }

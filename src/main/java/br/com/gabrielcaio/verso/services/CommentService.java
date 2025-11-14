@@ -1,4 +1,3 @@
-// src/main/java/br/com/gabrielcaio/verso/services/CommentService.java
 package br.com.gabrielcaio.verso.services;
 
 import br.com.gabrielcaio.verso.controllers.error.ResourceNotFoundException;
@@ -63,7 +62,9 @@ public class CommentService {
             } else if (!parent.getAuthor().getId().equals(author.getId())) {
                 notificationService.createNotificationForCommentReply(parent, comment);
             }
-        } catch (Exception ignored) { }
+        } catch (Exception ignored) {
+            // todo: logar erro
+        }
 
         return toFlatDto(comment);
     }

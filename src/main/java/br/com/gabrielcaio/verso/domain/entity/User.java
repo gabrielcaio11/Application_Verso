@@ -31,13 +31,13 @@ public class User implements UserDetails {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(unique = true, nullable = false,name = "username",length = 100)
+    @Column(unique = true, nullable = false, name = "username", length = 100)
     private String username;
 
-    @Column(nullable = false,name = "password")
+    @Column(nullable = false, name = "password")
     private String password;
 
-    @Column(nullable = false,unique = true, name = "email",length = 120)
+    @Column(nullable = false, unique = true, name = "email", length = 120)
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -48,7 +48,7 @@ public class User implements UserDetails {
             uniqueConstraints = @UniqueConstraint(name = "uk_user_role", columnNames = {"user_id", "role_id"})
     )
     @Column(name = "roles")
-    private Set<Roles> roles =  new HashSet<>();
+    private Set<Roles> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Article> articles = new HashSet<>();
@@ -101,6 +101,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
     @Override
     public String toString() {
         return "{" +

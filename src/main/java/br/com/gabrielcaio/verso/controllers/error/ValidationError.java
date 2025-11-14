@@ -19,6 +19,7 @@ public class ValidationError extends ErrorMessage {
     public ValidationError(Instant timestamp, Integer status, String error, String path) {
         super(timestamp, status, error, path);
     }
+
     public void addError(String field, String defaultMessage) {
         errors.add(new FieldMessage(field, defaultMessage));
     }
