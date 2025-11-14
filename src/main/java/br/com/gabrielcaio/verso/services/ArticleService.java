@@ -139,7 +139,7 @@ public class ArticleService {
 
     private Category cadastrarCategoria(String category) {
         var categoryDTO = categoryService.create(new CreateCategoryRequestDTO(category));
-        return categoryRepository.findById(categoryDTO.getId())
+        return categoryRepository.findByName(categoryDTO.getName())
                 .orElseThrow(() -> new ResourceNotFoundException("Categoria não encontrada após criação"));
     }
 }

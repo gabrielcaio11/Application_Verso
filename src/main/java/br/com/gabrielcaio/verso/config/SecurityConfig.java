@@ -1,7 +1,5 @@
 package br.com.gabrielcaio.verso.config;
 
-import br.com.gabrielcaio.verso.repositories.UserRepository;
-import br.com.gabrielcaio.verso.security.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -46,11 +44,6 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(10);
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new CustomUserDetailsService(userRepository);
     }
 
     @Bean
