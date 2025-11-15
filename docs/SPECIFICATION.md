@@ -10,6 +10,7 @@ Seu principal objetivo é permitir o compartilhamento de conhecimento de forma e
 ## 2. Perfis de Usuário
 
 ### 2.1 Usuário Comum
+
 - Pode se cadastrar e autenticar no sistema.
 - Pode criar, editar e excluir seus próprios artigos.
 - Pode salvar artigos como rascunho ou publicar.
@@ -17,6 +18,7 @@ Seu principal objetivo é permitir o compartilhamento de conhecimento de forma e
 - Pode interagir com artigos (curtir, comentar, favoritar)
 
 ### 2.2 Administrador
+
 - Possui todas as permissões de um usuário comum.
 - Pode gerenciar usuários, artigos e categorias.
 - Pode publicar ou despublicar artigos.
@@ -27,8 +29,8 @@ Seu principal objetivo é permitir o compartilhamento de conhecimento de forma e
 
 ## 3. Regras de Negócio (RN)
 
-| Código | Descrição                                                                                     |
-|--------|-----------------------------------------------------------------------------------------------|
+| Código   | Descrição                                                                                     |
+|----------|-----------------------------------------------------------------------------------------------|
 | **RN01** | Cada usuário deve possuir um email único.                                                     |
 | **RN02** | A senha do usuário deve ser armazenada de forma criptografada.                                |
 | **RN03** | Um artigo pertence a apenas um autor.                                                         |
@@ -38,14 +40,12 @@ Seu principal objetivo é permitir o compartilhamento de conhecimento de forma e
 | **RN07** | Categorias devem ter nomes únicos.                                                            |
 | **RN08** | Somente administradores podem criar, editar ou excluir categorias.                            |
 | **RN09** | Somente administradores podem alterar o papel de um usuário.                                  |
-| **RN10** | Artigos excluídos pelo autor ficam com status inativo.           |
+| **RN10** | Artigos excluídos pelo autor ficam com status inativo.                                        |
 | **RN11** | Cada artigo pode pertencer a uma única categoria.                                             |
 | **RN12** | A exclusão de uma categoria define a categoria do artigo como “Sem categoria”.                |
 | **RN13** | Apenas usuários autenticados podem criar ou editar artigos.                                   |
 | **RN14** | Comentários e curtidas só podem ser feitos por usuários autenticados (funcionalidade futura). |
 | **RN15** | Um artigo publicado é visível para qualquer visitante.                                        |
-
-
 
 ## 4. Extensões Futuras
 

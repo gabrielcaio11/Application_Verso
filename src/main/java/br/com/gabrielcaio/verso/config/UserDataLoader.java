@@ -29,19 +29,13 @@ public class UserDataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        userRepository.deleteAll();
-        rolesRepository.deleteAll();
+        // Criar ROLE USER se não existir
+        Roles roleUser = rolesRepository.findByName("USER")
+                .orElseGet(() -> rolesRepository.save(new Roles(null, "USER")));
 
-        if (rolesRepository.existsByName("USER")) {
-            Roles role_user = new Roles();
-            role_user.setName("USER");
-            rolesRepository.save(role_user);
-        }
-        if (rolesRepository.existsByName("ADMIN")) {
-            Roles role_admin = new Roles();
-            role_admin.setName("ADMIN");
-            rolesRepository.save(role_admin);
-        }
+        // Criar ROLE ADMIN se não existir
+        Roles roleAdmin = rolesRepository.findByName("ADMIN")
+                .orElseGet(() -> rolesRepository.save(new Roles(null, "ADMIN")));
 
         if (!userRepository.existsByEmail("admin@gmail.com")) {
             Roles role_admin = rolesRepository.findByName("ADMIN").get();

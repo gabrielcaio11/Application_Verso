@@ -11,9 +11,13 @@
 
 ## 📋 Sobre o Projeto
 
-O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em **Java 21** com **Spring Boot**. A aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado em perfis de usuário (comum e administrador).
+O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em **Java 21** com **Spring Boot**. A
+aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado
+em perfis de usuário (comum e administrador).
 
-A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**, oferecendo recursos como categorização de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários, reações e favoritos) e notificações.
+A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**, oferecendo recursos como categorização
+de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários,
+reações e favoritos) e notificações.
 
 ---
 
@@ -38,84 +42,84 @@ A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**
 ### Funcionalidades Principais
 
 - **Autenticação e Autorização**
-  - Sistema de autenticação HTTP Basic
-  - Controle de acesso baseado em roles
-  - Registro de novos usuários
-  - Criptografia de senhas com BCrypt
+    - Sistema de autenticação HTTP Basic
+    - Controle de acesso baseado em roles
+    - Registro de novos usuários
+    - Criptografia de senhas com BCrypt
 
 - **Gerenciamento de Artigos**
-  - Criação, edição e exclusão de artigos
-  - Sistema de status: `RASCUNHO` e `PUBLICADO`
-  - Artigos em rascunho visíveis apenas para o autor
-  - Artigos publicados visíveis para todos os usuários autenticados
-  - Associação de artigos a categorias
-  - Paginação e ordenação de resultados
-  - Busca de artigos publicados
-  - Busca de rascunhos do usuário autenticado
+    - Criação, edição e exclusão de artigos
+    - Sistema de status: `RASCUNHO` e `PUBLICADO`
+    - Artigos em rascunho visíveis apenas para o autor
+    - Artigos publicados visíveis para todos os usuários autenticados
+    - Associação de artigos a categorias
+    - Paginação e ordenação de resultados
+    - Busca de artigos publicados
+    - Busca de rascunhos do usuário autenticado
 
 - **Gerenciamento de Categorias** (apenas ADMIN)
-  - Criação, edição e exclusão de categorias
-  - Listagem de categorias com paginação
-  - Validação de nomes únicos
-  - Migração automática de artigos ao excluir categoria
+    - Criação, edição e exclusão de categorias
+    - Listagem de categorias com paginação
+    - Validação de nomes únicos
+    - Migração automática de artigos ao excluir categoria
 
 - **Gerenciamento de Usuários**
-  - Registro de novos usuários
-  - Listagem de usuários (apenas ADMIN)
-  - Sistema de roles (USER e ADMIN)
-  - Validação de email único
+    - Registro de novos usuários
+    - Listagem de usuários (apenas ADMIN)
+    - Sistema de roles (USER e ADMIN)
+    - Validação de email único
 
 - **Sistema de Favoritos**
-  - Adicionar artigos publicados aos favoritos
-  - Remover artigos dos favoritos
-  - Listar artigos favoritados com paginação
-  - Verificar se um artigo está nos favoritos
-  - Cada usuário pode favoritar apenas artigos publicados
+    - Adicionar artigos publicados aos favoritos
+    - Remover artigos dos favoritos
+    - Listar artigos favoritados com paginação
+    - Verificar se um artigo está nos favoritos
+    - Cada usuário pode favoritar apenas artigos publicados
 
 - **Sistema de Seguidores**
-  - Seguir e deixar de seguir outros usuários
-  - Listar usuários que você está seguindo
-  - Listar seus seguidores
-  - Visualizar perfil de usuário com contagem de seguidores
-  - Verificar se está seguindo um usuário
-  - Não é possível seguir a si mesmo
+    - Seguir e deixar de seguir outros usuários
+    - Listar usuários que você está seguindo
+    - Listar seus seguidores
+    - Visualizar perfil de usuário com contagem de seguidores
+    - Verificar se está seguindo um usuário
+    - Não é possível seguir a si mesmo
 
 - **Sistema de Notificações**
-  - Receber notificações quando autores seguidos publicam novos artigos
-  - Listar todas as notificações com paginação
-  - Listar apenas notificações não lidas
-  - Marcar notificações como lidas
-  - Marcar todas as notificações como lidas
-  - Contar notificações não lidas
+    - Receber notificações quando autores seguidos publicam novos artigos
+    - Listar todas as notificações com paginação
+    - Listar apenas notificações não lidas
+    - Marcar notificações como lidas
+    - Marcar todas as notificações como lidas
+    - Contar notificações não lidas
 
 - **Documentação de API**
-  - Interface Swagger UI para testes e documentação
-  - Documentação OpenAPI 3.0 completa
-  - Exemplos de requisições e respostas
+    - Interface Swagger UI para testes e documentação
+    - Documentação OpenAPI 3.0 completa
+    - Exemplos de requisições e respostas
 
 - **Sistema de Comentários**
-  - Comentar em artigos publicados (comentário raiz ou resposta usando `parentId`)
-  - Listagem paginada
-    - Threaded (raiz paginada com respostas aninhadas)
-  - Criação de comentários
-  - Exclusão de comentário
-    - Permissões: autor do comentário ou autor do artigo
-  - Contador de comentários por artigo (`comments_count`) mantido em criação/remoção
-  - Notificações:
-    - Autor do artigo é notificado ao receber novo comentário
-    - Autor do comentário é notificado ao receber uma resposta
+    - Comentar em artigos publicados (comentário raiz ou resposta usando `parentId`)
+    - Listagem paginada
+        - Threaded (raiz paginada com respostas aninhadas)
+    - Criação de comentários
+    - Exclusão de comentário
+        - Permissões: autor do comentário ou autor do artigo
+    - Contador de comentários por artigo (`comments_count`) mantido em criação/remoção
+    - Notificações:
+        - Autor do artigo é notificado ao receber novo comentário
+        - Autor do comentário é notificado ao receber uma resposta
 
 - **Sistema de Curtidas e Reações**
-  - Reagir a artigos publicados com diferentes tipos de reação (LIKE, LOVE, LAUGH, WOW, SAD, ANGRY)
-  - Adicionar ou atualizar reação em um artigo
-  - Remover reação de um artigo
-  - Listar todas as reações de um artigo com paginação
-  - Listar todas as reações do usuário autenticado
-  - Obter estatísticas detalhadas de reações por artigo (contagem por tipo)
-  - Verificar qual reação o usuário autenticado deu em um artigo
-  - Contador de curtidas (`likes_count`) mantido automaticamente
-  - Apenas artigos publicados podem receber reações
-  - Cada usuário pode ter apenas uma reação por artigo (atualizável)
+    - Reagir a artigos publicados com diferentes tipos de reação (LIKE, LOVE, LAUGH, WOW, SAD, ANGRY)
+    - Adicionar ou atualizar reação em um artigo
+    - Remover reação de um artigo
+    - Listar todas as reações de um artigo com paginação
+    - Listar todas as reações do usuário autenticado
+    - Obter estatísticas detalhadas de reações por artigo (contagem por tipo)
+    - Verificar qual reação o usuário autenticado deu em um artigo
+    - Contador de curtidas (`likes_count`) mantido automaticamente
+    - Apenas artigos publicados podem receber reações
+    - Cada usuário pode ter apenas uma reação por artigo (atualizável)
 
 ---
 
@@ -123,20 +127,22 @@ A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**
 ## 🛠️ Tecnologias Utilizadas
 
 ### Backend
-- **Linguagem:** Java 21  
-- **Framework:** Spring Boot 3.5.6  
-- **Banco de Dados:** PostgreSQL 18 
+
+- **Linguagem:** Java 21
+- **Framework:** Spring Boot 3.5.6
+- **Banco de Dados:** PostgreSQL 18
 - **Segurança:** Spring Security
 - **Spring Web** - API REST
-- **ORM:** Spring Data JPA  
-- **Validações:** Bean Validation (Jakarta Validation)  
-- **Documentação:** Swagger / OpenAPI 3  
-- **Containerização:** Docker e Docker Compose  
-- **Monitoramento:** Actuator + Prometheus + Grafana 
-- **Testes:** JUnit 5 + Mockito  
+- **ORM:** Spring Data JPA
+- **Validações:** Bean Validation (Jakarta Validation)
+- **Documentação:** Swagger / OpenAPI 3
+- **Containerização:** Docker e Docker Compose
+- **Monitoramento:** Actuator + Prometheus + Grafana
+- **Testes:** JUnit 5 + Mockito
 - **Gerenciamento de dependências:** Maven
 
 ### Ferramentas e Bibliotecas
+
 - **Lombok** - Redução de boilerplate
 - **MapStruct** - Mapeamento de objetos
 - **Springdoc OpenAPI** - Documentação da API
@@ -150,12 +156,14 @@ A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**
 ### Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+
 ```
 POSTGRES_DB=name_db
 POSTGRES_USER=user_db
 POSTGRES_PASSWORD=password_db
 SERVER_PORT=8080
 ```
+
 <a id="como-executar"></a>
 ## 🚀 Como Executar
 
@@ -166,6 +174,7 @@ SERVER_PORT=8080
 ```
 git clone https://github.com/gabrielcaio11/Application_Verso.git
 ```
+
 ```
 cd Application_Verso
 ```
@@ -173,17 +182,21 @@ cd Application_Verso
 #### 2. Crie o arquivo `.env` com as variáveis de ambiente necessárias (veja seção Pré-requisitos)
 
 #### 3. Execute o Docker Compose para montar as imagens e subir os containers:
+
 ```
 docker compose up --build
 ```
+
 #### 4. Aguarde a aplicação iniciar. Você verá mensagens indicando que a aplicação está rodando.
 
 #### 5. Acesse a aplicação:
+
 A documentação completa da API está disponível através do Swagger UI em:
 
 - **Swagger UI**: [Acessar](<http://localhost:8080/swagger-ui.html>)
 
 A documentação inclui:
+
 - Todos os endpoints disponíveis
 - Parâmetros de requisição e resposta
 - Exemplos de uso
@@ -195,10 +208,10 @@ A documentação inclui:
 
 O projeto será integrado com **Prometheus** e **Grafana** para coleta e visualização de métricas:
 
-- Requisições por segundo  
-- Tempo médio de resposta  
-- Erros (4xx / 5xx)  
-- Uso de CPU e memória  
+- Requisições por segundo
+- Tempo médio de resposta
+- Erros (4xx / 5xx)
+- Uso de CPU e memória
 
 ##### 📈 Dashboard Grafana
 
@@ -262,5 +275,7 @@ O projeto segue uma arquitetura em camadas:
 ## 📫 Contato
 
 - **LinkedIn**: [Gabriel Caio](https://www.linkedin.com/in/gabriel-caio/)
+
 * **Email:** [Gabriel Caio](mailto:gabri3lcaiodev@gmail.com)
+
 ---

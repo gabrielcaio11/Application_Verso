@@ -5,11 +5,11 @@ scrape_configs:
   - job_name: 'verso_application'
     metrics_path: /actuator/prometheus
     static_configs:
-      - targets: ['app:8080']
+      - targets: [ 'app:9090' ]
         labels:
           application: 'verso'
   - job_name: 'prometheus'
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: [ 'localhost:9090' ]
         labels:
           application: 'prometheus'

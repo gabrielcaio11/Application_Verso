@@ -1,7 +1,7 @@
 name: "Melhoria ✨"
 description: "Use este modelo para sugerir melhorias ou novas funcionalidades no Verso."
 title: "[Melhoria] "
-labels: ["enhancement"]
+labels: [ "enhancement" ]
 body:
   - type: markdown
     attributes:

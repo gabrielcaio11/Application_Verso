@@ -2,7 +2,12 @@
   "id": null,
   "uid": "verso-dashboard",
   "title": "Verso - Spring Boot Application Metrics",
-  "tags": ["spring", "prometheus", "java", "verso"],
+  "tags": [
+    "spring",
+    "prometheus",
+    "java",
+    "verso"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 1,
@@ -15,43 +20,70 @@
     {
       "type": "stat",
       "title": "Total HTTP Requests",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "sum(rate(http_server_requests_seconds_count{application=\"verso\"}[1m]))",
           "legendFormat": "requests/s"
         }
       ],
-      "gridPos": {"x": 0, "y": 0, "w": 6, "h": 4}
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      }
     },
     {
       "type": "timeseries",
       "title": "Average Response Time (seconds)",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "rate(http_server_requests_seconds_sum{application=\"verso\"}[1m]) / rate(http_server_requests_seconds_count{application=\"verso\"}[1m])",
           "legendFormat": "avg response time"
         }
       ],
-      "gridPos": {"x": 6, "y": 0, "w": 6, "h": 4}
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      }
     },
     {
       "type": "timeseries",
       "title": "HTTP Status Codes",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "sum(rate(http_server_requests_seconds_count{application=\"verso\", status!=\"\"}[1m])) by (status)",
           "legendFormat": "Status {{status}}"
         }
       ],
-      "gridPos": {"x": 0, "y": 4, "w": 12, "h": 5}
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 12,
+        "h": 5
+      }
     },
     {
       "type": "timeseries",
       "title": "JVM Memory Usage (MB)",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "sum(jvm_memory_used_bytes{application=\"verso\"}) / 1024 / 1024",
@@ -62,43 +94,72 @@
           "legendFormat": "max memory"
         }
       ],
-      "gridPos": {"x": 0, "y": 9, "w": 12, "h": 5}
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 12,
+        "h": 5
+      }
     },
     {
       "type": "timeseries",
       "title": "CPU Usage (%)",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "process_cpu_usage{application=\"verso\"} * 100",
           "legendFormat": "CPU usage"
         }
       ],
-      "gridPos": {"x": 0, "y": 14, "w": 6, "h": 4}
+      "gridPos": {
+        "x": 0,
+        "y": 14,
+        "w": 6,
+        "h": 4
+      }
     },
     {
       "type": "timeseries",
       "title": "Active JDBC Connections",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "jdbc_connections_active{application=\"verso\"}",
           "legendFormat": "active connections"
         }
       ],
-      "gridPos": {"x": 6, "y": 14, "w": 6, "h": 4}
+      "gridPos": {
+        "x": 6,
+        "y": 14,
+        "w": 6,
+        "h": 4
+      }
     },
     {
       "type": "timeseries",
       "title": "Live Threads",
-      "datasource": {"type": "prometheus", "uid": "PROM_DS"},
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PROM_DS"
+      },
       "targets": [
         {
           "expr": "jvm_threads_live_threads{application=\"verso\"}",
           "legendFormat": "live threads"
         }
       ],
-      "gridPos": {"x": 0, "y": 18, "w": 12, "h": 4}
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 12,
+        "h": 4
+      }
     }
   ],
   "templating": {

@@ -1,7 +1,7 @@
 name: "Bug 🐞"
 description: "Use este modelo para reportar erros ou falhas no sistema Verso."
 title: "[Bug] "
-labels: ["bug"]
+labels: [ "bug" ]
 body:
   - type: markdown
     attributes:

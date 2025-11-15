@@ -1,7 +1,7 @@
 name: "Tarefa 🛠️"
 description: "Use este modelo para registrar uma nova tarefa ou funcionalidade do projeto Verso."
 title: "[Tarefa] "
-labels: ["enhancement"]
+labels: [ "enhancement" ]
 body:
   - type: textarea
     id: contexto
