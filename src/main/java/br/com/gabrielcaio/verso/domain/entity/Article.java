@@ -42,9 +42,11 @@ public class Article {
     private Category category;
 
     @Column(name = "comments_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    @Builder.Default
     private Long commentsCount = 0L;
 
     @Column(name = "likes_count", nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    @Builder.Default
     private Long likesCount = 0L;
 
     @CreationTimestamp

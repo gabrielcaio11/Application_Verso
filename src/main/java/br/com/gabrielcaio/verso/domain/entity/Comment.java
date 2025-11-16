@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -40,7 +41,8 @@ public class Comment {
 
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @OrderBy("createdAt ASC")
-    private Set<Comment> replies;
+    @Builder.Default
+    private Set<Comment> replies = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

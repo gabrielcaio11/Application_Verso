@@ -6,8 +6,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_categories", uniqueConstraints = {
@@ -28,8 +28,9 @@ public class Category {
     @Column(nullable = false, unique = true, length = 60)
     private String name;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Article> articles = new ArrayList<>();
+    @OneToMany(mappedBy = "category")
+    @Builder.Default
+    private Set<Article> articles = new HashSet<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
