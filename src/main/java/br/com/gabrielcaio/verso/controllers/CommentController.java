@@ -5,7 +5,11 @@ import br.com.gabrielcaio.verso.dtos.CreateCommentRequestDTO;
 import br.com.gabrielcaio.verso.dtos.ThreadedCommentDTO;
 import br.com.gabrielcaio.verso.services.CommentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -16,8 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/verso")
 @RequiredArgsConstructor
-@Tag(name = "Comment", description = "Endpoints para comentários em artigos")
+@Tag(name = "Comments", description = "Endpoints para comentários em artigos")
 @Slf4j
 public class CommentController {
 
@@ -52,7 +54,7 @@ public class CommentController {
             @PathVariable Long articleId,
             @Valid @RequestBody CreateCommentRequestDTO dto
     ) {
-        log.info("Recebida requisição para criar comentario com conteudo: {}", dto.getContent());
+        log.info("Recebida requisição para criar comentario no artigo com id {} e com conteudo: {}", articleId, dto.getContent());
         var entity = commentService.create(articleId, dto);
         log.info("Comentario criado com sucesso.");
         return ResponseEntity.status(HttpStatus.CREATED).body(entity);
@@ -71,16 +73,42 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @Parameters({
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "page",
+                    description = "Número da página (inicia em 0). Padrão: 0",
+                    example = "0",
+                    schema = @Schema(type = "integer", defaultValue = "0")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "size",
+                    description = "Quantidade de itens por página. Padrão: 10",
+                    example = "10",
+                    schema = @Schema(type = "integer", defaultValue = "10")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "sort",
+                    description = "Ordenação no formato: campo,(asc|desc). Padrão: createdAt,desc",
+                    examples = {
+                            @ExampleObject(name = "Ordenação por Data de criação", value = "createdAt,DESC"),
+                            @ExampleObject(name = "Ordenação por ultima atualização", value = "updatedAt,DESC")
+                    },
+                    schema = @Schema(type = "string", defaultValue = "createdAt,DESC")
+            )
+    })
     @GetMapping("/article/{articleId}/comments")
     public ResponseEntity<Page<CommentResponseDTO>> listFlat(
             @PathVariable Long articleId,
-            @PageableDefault(page = 0, size = 10, sort = "updatedAt", direction = Sort.Direction.DESC)
+            @ParameterObject
             Pageable pageable
     ) {
         log.info("Buscando comentarios do artigo: {}. Página: {}, Tamanho: {}", articleId, pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = commentService.listFlatByArticle(articleId, pageable);
         log.info("Total de comentarios encontrados: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
     @Operation(
@@ -96,15 +124,47 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @GetMapping("/article/{articleId}/comments/threaded")
+    @Parameters({
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "page",
+                    description = "Número da página (inicia em 0). Padrão: 0",
+                    example = "0",
+                    schema = @Schema(type = "integer", defaultValue = "0")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "size",
+                    description = "Quantidade de itens por página. Padrão: 10",
+                    example = "10",
+                    schema = @Schema(type = "integer", defaultValue = "10")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "sort",
+                    description = "Ordenação no formato: campo,(asc|desc). Padrão: createdAt,desc",
+                    examples = {
+                            @ExampleObject(name = "Ordenação por Data de criação", value = "createdAt,DESC"),
+                            @ExampleObject(name = "Ordenação por ultima atualização", value = "updatedAt,DESC")
+                    },
+                    schema = @Schema(type = "string", defaultValue = "createdAt,DESC")
+            )
+    })
+    @GetMapping("/article/{id}/comments/threaded")
     public ResponseEntity<Page<ThreadedCommentDTO>> listThreaded(
-            @PathVariable Long articleId,
-            @ParameterObject Pageable pageable
+            @Parameter(
+                    description = "ID do artigo",
+                    example = "1",
+                    required = true
+            )
+            @PathVariable Long id,
+            @ParameterObject
+            Pageable pageable
     ) {
         log.info("Buscando rascunhos do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
-        var pageResponse = commentService.listThreadedByArticle(articleId, pageable);
-        log.info("Total de comentarios encontrados: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
+        var pageResponse = commentService.listThreadedByArticle(id, pageable);
+        log.info("Total de comentarios encontrados threaded: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
     @Operation(
@@ -119,8 +179,15 @@ public class CommentController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @DeleteMapping("/comments/{commentId}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        log.warn("Requisição para deletar comentario ID: {}", id);
+    public ResponseEntity<Void> delete(
+            @Parameter(
+                    description = "ID do comentario",
+                    example = "1",
+                    required = true
+            )
+            @PathVariable Long id
+    ) {
+        log.info("Requisição para deletar comentario ID: {}", id);
         commentService.delete(id);
         log.info("Comentario ID: {} deletado com sucesso", id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
