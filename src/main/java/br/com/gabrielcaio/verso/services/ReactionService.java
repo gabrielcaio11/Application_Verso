@@ -12,6 +12,7 @@ import br.com.gabrielcaio.verso.dtos.ReactionResponseDTO;
 import br.com.gabrielcaio.verso.repositories.ArticleRepository;
 import br.com.gabrielcaio.verso.repositories.ReactionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReactionService {
@@ -31,41 +33,55 @@ public class ReactionService {
     @Transactional
     public ReactionResponseDTO addOrUpdateReaction(Long articleId, CreateReactionRequestDTO dto) {
         var currentUser = userService.getCurrentUser();
-        var article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado"));
 
-        // Validações
+        log.info("[REACTION] Iniciando add/update reação. userId={}, articleId={}, newType={}",
+                currentUser.getId(), articleId, dto.getType());
+
+        var article = articleRepository.findById(articleId)
+                .orElseThrow(() -> {
+                    log.warn("[REACTION] Artigo não encontrado. articleId={}", articleId);
+                    return new ResourceNotFoundException("Artigo não encontrado");
+                });
+
         if (article.getStatus() != ArticleStatus.PUBLICADO) {
+            log.warn("[REACTION] Tentativa de reagir a artigo não publicado. articleId={}, status={}",
+                    articleId, article.getStatus());
             throw new BusinessException("Apenas artigos publicados podem receber reações");
         }
 
-        // Verificar se já existe reação do usuário para este artigo
         var existingReaction = reactionRepository.findByUserAndArticle(currentUser, article);
-
         Reaction reaction;
+
         if (existingReaction.isPresent()) {
-            // Atualizar reação existente
             reaction = existingReaction.get();
+
+            log.info("[REACTION] Atualizando reação existente. reactionId={}, userId={}, oldType={}, newType={}",
+                    reaction.getId(), currentUser.getId(), reaction.getType(), dto.getType());
+
             ReactionType oldType = reaction.getType();
             reaction.setType(dto.getType());
             reaction = reactionRepository.save(reaction);
 
-            // Atualizar contador de likes se necessário
             updateLikesCount(article, oldType, dto.getType());
+
         } else {
-            // Criar nova reação
+            log.info("[REACTION] Criando nova reação. userId={}, articleId={}, type={}",
+                    currentUser.getId(), articleId, dto.getType());
+
             reaction = new Reaction();
             reaction.setUser(currentUser);
             reaction.setArticle(article);
             reaction.setType(dto.getType());
             reaction = reactionRepository.save(reaction);
 
-            // Atualizar contador de likes
             if (dto.getType() == ReactionType.LIKE) {
                 article.setLikesCount(article.getLikesCount() + 1);
                 articleRepository.save(article);
             }
         }
+
+        log.info("[REACTION] Reação registrada com sucesso. reactionId={}, articleId={}, userId={}",
+                reaction.getId(), articleId, currentUser.getId());
 
         return toDto(reaction);
     }
@@ -73,41 +89,79 @@ public class ReactionService {
     @Transactional
     public void removeReaction(Long articleId) {
         var currentUser = userService.getCurrentUser();
+
+        log.info("[REACTION] Removendo reação. userId={}, articleId={}",
+                currentUser.getId(), articleId);
+
         var article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado"));
+                .orElseThrow(() -> {
+                    log.warn("[REACTION] Artigo não encontrado na remoção. articleId={}", articleId);
+                    return new ResourceNotFoundException("Artigo não encontrado");
+                });
 
         var reaction = reactionRepository.findByUserAndArticle(currentUser, article)
-                .orElseThrow(() -> new ResourceNotFoundException("Reação não encontrada"));
+                .orElseThrow(() -> {
+                    log.warn("[REACTION] Nenhuma reação encontrada para remoção. userId={}, articleId={}",
+                            currentUser.getId(), articleId);
+                    return new ResourceNotFoundException("Reação não encontrada");
+                });
 
-        // Atualizar contador de likes se necessário
         if (reaction.getType() == ReactionType.LIKE) {
+            log.debug("[REACTION] Removendo like. articleId={}, oldLikes={}",
+                    articleId, article.getLikesCount());
             article.setLikesCount(Math.max(0, article.getLikesCount() - 1));
             articleRepository.save(article);
         }
 
         reactionRepository.delete(reaction);
+
+        log.info("[REACTION] Reação removida com sucesso. reactionId={}, articleId={}, userId={}",
+                reaction.getId(), articleId, currentUser.getId());
     }
 
     @Transactional(readOnly = true)
     public Page<ReactionResponseDTO> findAllReactionsByArticle(Long articleId, Pageable pageable) {
+        log.debug("[REACTION] Buscando reações de artigo. articleId={}, page={}",
+                articleId, pageable);
+
         var article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado"));
+                .orElseThrow(() -> {
+                    log.warn("[REACTION] Artigo não encontrado na listagem de reações. articleId={}", articleId);
+                    return new ResourceNotFoundException("Artigo não encontrado");
+                });
 
         var reactionsPage = reactionRepository.findAllByArticle(article, pageable);
+
+        log.info("[REACTION] Reações listadas. articleId={}, total={}",
+                articleId, reactionsPage.getTotalElements());
+
         return reactionsPage.map(this::toDto);
     }
 
     @Transactional(readOnly = true)
     public Page<ReactionResponseDTO> findAllReactionsByUser(Pageable pageable) {
         var currentUser = userService.getCurrentUser();
+
+        log.debug("[REACTION] Buscando reações do usuário. userId={}, page={}",
+                currentUser.getId(), pageable);
+
         var reactionsPage = reactionRepository.findAllByUser(currentUser, pageable);
+
+        log.info("[REACTION] Reações encontradas para usuário. userId={}, total={}",
+                currentUser.getId(), reactionsPage.getTotalElements());
+
         return reactionsPage.map(this::toDto);
     }
 
     @Transactional(readOnly = true)
     public ArticleReactionStatsDTO getArticleReactionStats(Long articleId) {
+        log.debug("[REACTION] Calculando estatísticas de reações. articleId={}", articleId);
+
         var article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado"));
+                .orElseThrow(() -> {
+                    log.warn("[REACTION] Artigo não encontrado para estatísticas. articleId={}", articleId);
+                    return new ResourceNotFoundException("Artigo não encontrado");
+                });
 
         var currentUser = userService.getCurrentUser();
         var userReaction = reactionRepository.findByUserAndArticle(currentUser, article);
@@ -123,37 +177,58 @@ public class ReactionService {
             }
         }
 
+        log.info("[REACTION] Estatísticas geradas. articleId={}, totalReactions={}",
+                articleId, totalReactions);
+
         return new ArticleReactionStatsDTO(
                 article.getId(),
                 article.getTitle(),
                 totalReactions,
                 reactionsByType,
-                userReaction.map(r -> r.getType().name()).orElse(null));
+                userReaction.map(r -> r.getType().name()).orElse(null)
+        );
     }
 
     @Transactional(readOnly = true)
     public ReactionType getUserReaction(Long articleId) {
         var currentUser = userService.getCurrentUser();
-        var article = articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Artigo não encontrado"));
 
-        return reactionRepository.findByUserAndArticle(currentUser, article)
+        log.debug("[REACTION] Buscando reação do usuário para artigo. userId={}, articleId={}",
+                currentUser.getId(), articleId);
+
+        var article = articleRepository.findById(articleId)
+                .orElseThrow(() -> {
+                    log.warn("[REACTION] Artigo não encontrado ao buscar reação do usuário. articleId={}", articleId);
+                    return new ResourceNotFoundException("Artigo não encontrado");
+                });
+
+        var reaction = reactionRepository.findByUserAndArticle(currentUser, article)
                 .map(Reaction::getType)
                 .orElse(null);
+
+        log.info("[REACTION] Reação do usuário encontrada. userId={}, articleId={}, reaction={}",
+                currentUser.getId(), articleId, reaction);
+
+        return reaction;
     }
 
     private void updateLikesCount(Article article, ReactionType oldType, ReactionType newType) {
         boolean wasLike = oldType == ReactionType.LIKE;
         boolean isLike = newType == ReactionType.LIKE;
 
+        log.debug("[REACTION] Ajustando likes. articleId={}, oldType={}, newType={}",
+                article.getId(), oldType, newType);
+
         if (wasLike && !isLike) {
-            // Removeu like
             article.setLikesCount(Math.max(0, article.getLikesCount() - 1));
             articleRepository.save(article);
+            log.debug("[REACTION] Like removido. articleId={}, newLikes={}",
+                    article.getId(), article.getLikesCount());
         } else if (!wasLike && isLike) {
-            // Adicionou like
             article.setLikesCount(article.getLikesCount() + 1);
             articleRepository.save(article);
+            log.debug("[REACTION] Like adicionado. articleId={}, newLikes={}",
+                    article.getId(), article.getLikesCount());
         }
     }
 
@@ -168,6 +243,7 @@ public class ReactionService {
                 article.getTitle(),
                 user.getId(),
                 user.getUsername(),
-                reaction.getCreatedAt());
+                reaction.getCreatedAt()
+        );
     }
 }

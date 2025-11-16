@@ -19,7 +19,8 @@ public interface ArticleMapper {
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "category", ignore = true)
     @Mapping(target = "author", ignore = true)
-    @Mapping(target = "status", expression = "java(ArticleStatus.PUBLICADO)")
+    @Mapping(target = "commentsCount", expression = "java(0L)")
+    @Mapping(target = "likesCount", expression = "java(0L)")
     Article toEntity(CreateArticleRequestDTO dto);
 
     @Mapping(source = "category.name", target = "category")
