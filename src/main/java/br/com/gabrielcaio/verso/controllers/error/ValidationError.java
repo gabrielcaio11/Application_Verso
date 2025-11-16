@@ -1,9 +1,6 @@
 package br.com.gabrielcaio.verso.controllers.error;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -13,6 +10,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class ValidationError extends ErrorMessage {
     private List<FieldMessage> errors = new ArrayList<FieldMessage>();
 
