@@ -5,17 +5,19 @@ import br.com.gabrielcaio.verso.dtos.UserProfileDTO;
 import br.com.gabrielcaio.verso.services.FollowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -47,13 +49,17 @@ public class FollowController {
     })
     @PostMapping("/{userId}")
     public ResponseEntity<FollowResponseDTO> followUser(
-            @Parameter(description = "ID do usuário a ser seguido", example = "1", required = true)
+            @Parameter(
+                    description = "ID do usuário a ser seguido",
+                    example = "1",
+                    required = true
+            )
             @PathVariable Long userId
     ) {
         log.info("Request to follow user with ID: {}", userId);
         var response = followService.followUser(userId);
         log.info("Successfully followed user with ID: {}", userId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @Operation(
@@ -74,7 +80,7 @@ public class FollowController {
         log.info("Request to unfollow user with ID: {}", userId);
         followService.unfollowUser(userId);
         log.info("Successfully unfollowed user with ID: {}", userId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @Operation(
@@ -90,15 +96,41 @@ public class FollowController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @Parameters({
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "page",
+                    description = "Número da página (inicia em 0). Padrão: 0",
+                    example = "0",
+                    schema = @Schema(type = "integer", defaultValue = "0")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "size",
+                    description = "Quantidade de itens por página. Padrão: 10",
+                    example = "10",
+                    schema = @Schema(type = "integer", defaultValue = "10")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "sort",
+                    description = "Ordenação no formato: campo,(asc|desc). Padrão: createdAt,desc",
+                    examples = {
+                            @ExampleObject(name = "Ordenação por Data de criação", value = "createdAt,DESC"),
+                            @ExampleObject(name = "Ordenação por ultima atualização", value = "updatedAt,DESC")
+                    },
+                    schema = @Schema(type = "string", defaultValue = "createdAt,DESC")
+            )
+    })
     @GetMapping("/following")
     public ResponseEntity<Page<UserProfileDTO>> getFollowing(
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+            @ParameterObject
             Pageable pageable
     ) {
         log.info("Buscando lista de quem o usuário autenticado segue. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = followService.getFollowing(pageable);
         log.info("Lista de usuários seguidos retornada com sucesso. Total de elementos: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
     @Operation(
@@ -114,15 +146,41 @@ public class FollowController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
+    @Parameters({
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "page",
+                    description = "Número da página (inicia em 0). Padrão: 0",
+                    example = "0",
+                    schema = @Schema(type = "integer", defaultValue = "0")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "size",
+                    description = "Quantidade de itens por página. Padrão: 10",
+                    example = "10",
+                    schema = @Schema(type = "integer", defaultValue = "10")
+            ),
+            @Parameter(
+                    in = ParameterIn.QUERY,
+                    name = "sort",
+                    description = "Ordenação no formato: campo,(asc|desc). Padrão: createdAt,desc",
+                    examples = {
+                            @ExampleObject(name = "Ordenação por Data de criação", value = "createdAt,DESC"),
+                            @ExampleObject(name = "Ordenação por ultima atualização", value = "updatedAt,DESC")
+                    },
+                    schema = @Schema(type = "string", defaultValue = "createdAt,DESC")
+            )
+    })
     @GetMapping("/followers")
     public ResponseEntity<Page<UserProfileDTO>> getFollowers(
-            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.DESC)
+            @ParameterObject
             Pageable pageable
     ) {
         log.info("Buscando lista de seguidores do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
         var pageResponse = followService.getFollowers(pageable);
         log.info("Lista de seguidores retornada com sucesso. Total de elementos: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.FOUND).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
     }
 
     @Operation(
@@ -141,13 +199,17 @@ public class FollowController {
     })
     @GetMapping("/users/{userId}")
     public ResponseEntity<UserProfileDTO> getUserProfile(
-            @Parameter(description = "ID do usuário", example = "1", required = true)
+            @Parameter(
+                    description = "ID do usuário",
+                    example = "1",
+                    required = true
+            )
             @PathVariable Long userId
     ) {
         log.info("Buscando perfil do usuário com ID: {}", userId);
         var profile = followService.getUserProfile(userId);
         log.info("Perfil do usuário com ID: {} retornado com sucesso", userId);
-        return ResponseEntity.status(HttpStatus.FOUND).body(profile);
+        return ResponseEntity.status(HttpStatus.OK).body(profile);
     }
 
     @Operation(
@@ -165,7 +227,11 @@ public class FollowController {
     })
     @GetMapping("/{userId}/check")
     public ResponseEntity<Boolean> checkFollowing(
-            @Parameter(description = "ID do usuário", example = "1", required = true)
+            @Parameter(
+                    description = "ID do usuário",
+                    example = "1",
+                    required = true
+            )
             @PathVariable Long userId
     ) {
         log.info("Verificando se o usuário autenticado está seguindo o usuário com ID: {}", userId);
