@@ -28,7 +28,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/verso/users")
 @RequiredArgsConstructor
-@Tag(name = "Usesr", description = "Endpoints para gerenciamento de usuários")
+@Tag(name = "Users", description = "Endpoints para gerenciamento de usuários")
 @Slf4j
 public class UserController {
 

@@ -2,31 +2,24 @@
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copia apenas o pom.xml e baixa as dependências para cache
 COPY pom.xml ./
-RUN mvn dependency:go-offline -B
+RUN mvn -q dependency:go-offline
 
-# Copia o código fonte da aplicação
 COPY src ./src
 
-# Faz o build da aplicação (sem rodar os testes)
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -q
 
-# Etapa 2: Imagem final para rodar a aplicação
+# Etapa 2: Imagem final
 FROM eclipse-temurin:21-jre-alpine
 
-# Instala curl (usado no healthcheck) e outras utilidades mínimas
-RUN apk add --no-cache curl bash
+# Instala curl para healthchecks
+RUN apk add --no-cache curl
 
-# Define diretório de trabalho
 WORKDIR /app
 
-# Copia o JAR gerado na etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 
-# Expõe as portas da aplicação e do management
 EXPOSE 8080
 EXPOSE 9090
 
-# Comando para rodar a aplicação
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseContainerSupport", "-XX:MaxRAMPercentage=75.0", "-jar", "app.jar"]

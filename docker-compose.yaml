@@ -7,11 +7,12 @@ services:
     env_file:
       - .env
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     networks:
       - verso_network
+    restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h localhost" ]
+      test: ["CMD-SHELL", "pg_isready -U $POSTGRES_USER -d $POSTGRES_DB"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -31,8 +32,9 @@ services:
       - .env
     networks:
       - verso_network
+    restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:${MANAGEMENT_PORT}/actuator/health || exit 1" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:9090/actuator/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -48,9 +50,6 @@ services:
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
-      - '--web.console.templates=/usr/share/prometheus/consoles'
     networks:
       - verso_network
     depends_on:
@@ -66,11 +65,6 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
-      - GF_USERS_ALLOW_SIGN_UP=false
-      - GF_SERVER_ROOT_URL=http://localhost:3000
-      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/verso-metrics.json
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-      - GF_DASHBOARDS_MIN_REFRESH_INTERVAL=5s
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -79,8 +73,9 @@ services:
       - verso_network
     depends_on:
       - prometheus
+    restart: unless-stopped
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1" ]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

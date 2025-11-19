@@ -1,19 +1,24 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
     show-sql: false
-    format-sql: false
+    properties.hibernate.format_sql: false
+
   flyway:
     enabled: false
 
 logging:
   level:
+    root: WARN
     org.testcontainers: INFO
-    org.hibernate: WARN
+    org.hibernate.SQL: WARN
 
 server:
   port: 0
