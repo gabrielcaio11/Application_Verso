@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     Page<Article> findAllByStatus(ArticleStatus articleStatus, Pageable pageable);
@@ -18,4 +19,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
     boolean existsByAuthorIdAndTitleIgnoreCase(Long id, String title);
 
     List<Article> findAllByCategory(Category category);
+
+    Optional<Article> findByTitle(String title);
 }

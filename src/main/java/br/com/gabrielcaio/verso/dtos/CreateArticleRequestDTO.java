@@ -2,6 +2,7 @@ package br.com.gabrielcaio.verso.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class CreateArticleRequestDTO {
             maxLength = 200
     )
     @NotBlank(message = "Título é obrigatório")
+    @Size(min = 3, max = 200, message = "Título deve ter entre 3 e 200 caracteres")
     private String title;
 
     @Schema(
@@ -31,6 +33,7 @@ public class CreateArticleRequestDTO {
             minLength = 10
     )
     @NotBlank(message = "Conteúdo é obrigatório")
+    @Size(min = 10, message = "Conteúdo deve ter pelo menos 10 caracteres")
     private String content;
 
     @Schema(

@@ -1,6 +1,8 @@
 package br.com.gabrielcaio.verso.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Schema(description = "DTO para atualização de um artigo")
 public class UpdateArticleRequestDTO {
+
     @Schema(
             description = "Título do artigo",
             example = "Introdução ao Spring Boot",
@@ -19,6 +22,7 @@ public class UpdateArticleRequestDTO {
             minLength = 3,
             maxLength = 200
     )
+    @Size(min = 3, max = 200, message = "Título deve ter entre 3 e 200 caracteres")
     private String title;
 
     @Schema(
@@ -27,6 +31,7 @@ public class UpdateArticleRequestDTO {
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
             minLength = 10
     )
+    @Size(min = 10, message = "Conteúdo deve ter pelo menos 10 caracteres")
     private String content;
 
     @Schema(
@@ -41,5 +46,6 @@ public class UpdateArticleRequestDTO {
             example = "PUBLICADO",
             requiredMode = Schema.RequiredMode.REQUIRED
     )
+    @NotBlank(message = "Status é obrigatório")
     private String status;
 }
