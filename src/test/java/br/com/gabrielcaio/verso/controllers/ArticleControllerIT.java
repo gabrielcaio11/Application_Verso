@@ -1,5 +1,6 @@
 package br.com.gabrielcaio.verso.controllers;
 
+import br.com.gabrielcaio.verso.config.BaseIntegrationTest;
 import br.com.gabrielcaio.verso.domain.entity.Article;
 import br.com.gabrielcaio.verso.dtos.CreateArticleRequestDTO;
 import br.com.gabrielcaio.verso.dtos.CreateArticleResponseDTO;
@@ -22,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class ArticleControllerIT {
+class ArticleControllerIT extends BaseIntegrationTest {
 
     @LocalServerPort
     private int port;

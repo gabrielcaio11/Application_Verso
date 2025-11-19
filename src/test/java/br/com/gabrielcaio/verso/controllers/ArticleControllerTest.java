@@ -1,5 +1,6 @@
 package br.com.gabrielcaio.verso.controllers;
 
+import br.com.gabrielcaio.verso.config.BaseIntegrationTest;
 import br.com.gabrielcaio.verso.dtos.ArticleResponseWithTitleAndStatusAndCategoryName;
 import br.com.gabrielcaio.verso.dtos.CreateArticleRequestDTO;
 import br.com.gabrielcaio.verso.dtos.CreateArticleResponseDTO;
@@ -33,7 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ArticleController.class)
 @ActiveProfiles("test")
-class ArticleControllerTest {
+class ArticleControllerTest extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

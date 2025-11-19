@@ -1,40 +1,19 @@
 spring:
-  application:
-    name: verso-test
-
-  datasource:
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
-        show_sql: false
-        format_sql: false
-    defer-datasource-initialization: true
-
-  sql:
-    init:
-      mode: always
-
-  h2:
-    console:
-      enabled: true
-
-server:
-  port: 0
-
-management:
-  server:
-    port: 0
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    format-sql: false
+  flyway:
+    enabled: false
 
 logging:
   level:
-    br.com.gabrielcaio.verso: DEBUG
-    org.springframework.security: WARN
+    org.testcontainers: INFO
     org.hibernate: WARN
+
+server:
+  port: 0
