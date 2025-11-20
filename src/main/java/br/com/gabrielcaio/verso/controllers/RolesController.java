@@ -20,14 +20,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/verso/roles")
 @RequiredArgsConstructor
 @Tag(name = "Roles", description = "Endpoints para gerenciamento de roles")
 @Slf4j
-public class RolesController {
+public class RolesController
+{
 
     private final RolesService rolesService;
 
@@ -35,7 +43,7 @@ public class RolesController {
             summary = "Buscar todos as roles com paginação",
             description = "Retorna uma lista paginada de roles."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de roles retornada com sucesso",
@@ -44,7 +52,7 @@ public class RolesController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -74,18 +82,26 @@ public class RolesController {
     public ResponseEntity<Page<RolesWithIdAndName>> getAll(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando todos as roles. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando todos as roles. Página: {}, Tamanho: {}", pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
         var pageResponse = rolesService.findAllRolesWithIdAndName(pageable);
-        log.info("Roles recuperadas com sucesso. Total de roles: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        log.info(
+                "Roles recuperadas com sucesso. Total de roles: {}",
+                pageResponse.getTotalElements()
+        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Buscar role por ID",
             description = "Retorna uma role específica."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Role encontrada",
@@ -103,18 +119,20 @@ public class RolesController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Buscando role por ID: {}", id);
         var response = rolesService.findById(id);
         log.info("Role recuperada com sucesso: {}", response.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     @Operation(
             summary = "Registro de nova role",
             description = "Cria um nova role."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Role criada com sucesso",
@@ -128,18 +146,20 @@ public class RolesController {
     @PostMapping
     public ResponseEntity<RolesWithIdAndName> create(
             @RequestBody CreateRolesRequestDTO role
-    ) {
+    )
+    {
         log.info("Criando nova role: {}", role.getName());
         var response = rolesService.save(role);
         log.info("Role criada com sucesso: {}", response.getName());
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @Operation(
             summary = "Atualizar role",
             description = "Atualiza uma role existente."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Role atualizada com sucesso",
@@ -160,18 +180,20 @@ public class RolesController {
             )
             @PathVariable Long id,
             @RequestBody CreateRolesRequestDTO dto
-    ) {
+    )
+    {
         log.info("Atualizando role com ID: {}", id);
         var updatedRole = rolesService.update(id, dto);
         log.info("Role com ID: {} atualizada com sucesso", id);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedRole);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(updatedRole);
     }
 
     @Operation(
             summary = "Deletar role",
             description = "Exclui uma role. Apenas usario com papel de ADMIN pode excluir roles."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "204", description = "Role deletada com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "403", description = "Acesso negado - apenas ADMIN pode deletar roles"),
@@ -186,10 +208,12 @@ public class RolesController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Deletando role com ID: {}", id);
         rolesService.delete(id);
         log.info("Role com ID: {} deletada com sucesso", id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

@@ -12,7 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO para atualização de uma categoria")
-public class UpdateCategoryRequestDTO {
+public class UpdateCategoryRequestDTO
+{
     @Schema(
             description = "Nome da categoria",
             example = "Tecnologia",

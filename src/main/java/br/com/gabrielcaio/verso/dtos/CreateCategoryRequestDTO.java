@@ -12,7 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO para criação de uma nova categoria")
-public class CreateCategoryRequestDTO {
+public class CreateCategoryRequestDTO
+{
 
     @Schema(
             description = "Nome da categoria (deve ser único)",

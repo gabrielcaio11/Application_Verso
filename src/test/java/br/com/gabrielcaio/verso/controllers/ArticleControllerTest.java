@@ -7,6 +7,7 @@ import br.com.gabrielcaio.verso.dtos.CreateArticleResponseDTO;
 import br.com.gabrielcaio.verso.dtos.UpdateArticleRequestDTO;
 import br.com.gabrielcaio.verso.services.ArticleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +22,27 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
-
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ArticleController.class)
 @ActiveProfiles("test")
-class ArticleControllerTest extends BaseIntegrationTest {
+class ArticleControllerTest extends BaseIntegrationTest
+{
 
     @Autowired
     private MockMvc mockMvc;
@@ -51,7 +59,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     private UpdateArticleRequestDTO updateArticleRequestDTO;
 
     @BeforeEach
-    void setUp() {
+    void setUp()
+    {
         // Configurar DTOs de teste com dados válidos
         createArticleRequestDTO = new CreateArticleRequestDTO(
                 "Test Article Title Valid",
@@ -82,7 +91,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void create_ShouldReturnCreatedArticle() throws Exception {
+    void create_ShouldReturnCreatedArticle() throws Exception
+    {
         when(articleService.create(any(CreateArticleRequestDTO.class)))
                 .thenReturn(createArticleResponseDTO);
 
@@ -92,7 +102,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(createArticleRequestDTO)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("Test Article Title Valid"))
-                .andExpect(jsonPath("$.content").value("This is a test content with more than 10 characters for validation"))
+                .andExpect(jsonPath("$.content").value(
+                        "This is a test content with more than 10 characters for validation"))
                 .andExpect(jsonPath("$.category").value("Technology"));
 
         verify(articleService, times(1)).create(any(CreateArticleRequestDTO.class));
@@ -100,7 +111,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void create_ShouldReturnUnprocessableEntity_WhenTitleIsBlank() throws Exception {
+    void create_ShouldReturnUnprocessableEntity_WhenTitleIsBlank() throws Exception
+    {
         CreateArticleRequestDTO invalidRequest = new CreateArticleRequestDTO(
                 "", // título vazio
                 "Valid content with more than 10 characters",
@@ -114,14 +126,16 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isUnprocessableEntity()) // 422
                 .andExpect(jsonPath("$.errors[0].fieldName").value("title"))
-                .andExpect(jsonPath("$.errors[0].message").exists()); // Apenas verifica que há uma mensagem para o campo title
+                .andExpect(jsonPath(
+                        "$.errors[0].message").exists()); // Apenas verifica que há uma mensagem para o campo title
 
         verify(articleService, never()).create(any(CreateArticleRequestDTO.class));
     }
 
     @Test
     @WithMockUser
-    void create_ShouldReturnUnprocessableEntity_WhenContentIsTooShort() throws Exception {
+    void create_ShouldReturnUnprocessableEntity_WhenContentIsTooShort() throws Exception
+    {
         CreateArticleRequestDTO invalidRequest = new CreateArticleRequestDTO(
                 "Valid Title",
                 "Short", // conteúdo muito curto
@@ -135,14 +149,16 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isUnprocessableEntity()) // 422
                 .andExpect(jsonPath("$.errors[0].fieldName").value("content"))
-                .andExpect(jsonPath("$.errors[0].message").value("Conteúdo deve ter pelo menos 10 caracteres"));
+                .andExpect(jsonPath("$.errors[0].message").value(
+                        "Conteúdo deve ter pelo menos 10 caracteres"));
 
         verify(articleService, never()).create(any(CreateArticleRequestDTO.class));
     }
 
     @Test
     @WithMockUser
-    void create_ShouldReturnUnprocessableEntity_WhenCategoryIsBlank() throws Exception {
+    void create_ShouldReturnUnprocessableEntity_WhenCategoryIsBlank() throws Exception
+    {
         CreateArticleRequestDTO invalidRequest = new CreateArticleRequestDTO(
                 "Valid Title",
                 "Valid content with more than 10 characters",
@@ -163,7 +179,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void create_ShouldReturnUnprocessableEntity_WhenStatusIsBlank() throws Exception {
+    void create_ShouldReturnUnprocessableEntity_WhenStatusIsBlank() throws Exception
+    {
         CreateArticleRequestDTO invalidRequest = new CreateArticleRequestDTO(
                 "Valid Title",
                 "Valid content with more than 10 characters",
@@ -184,7 +201,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void findAllPublished_ShouldReturnPageOfArticles() throws Exception {
+    void findAllPublished_ShouldReturnPageOfArticles() throws Exception
+    {
         Page<ArticleResponseWithTitleAndStatusAndCategoryName> page = new PageImpl<>(
                 List.of(articleResponse),
                 PageRequest.of(0, 10),
@@ -200,7 +218,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .param("sort", "createdAt,desc"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].title").value("Test Article Title Valid"))
-                .andExpect(jsonPath("$.content[0].content").value("This is a test content with more than 10 characters for validation"))
+                .andExpect(jsonPath("$.content[0].content").value(
+                        "This is a test content with more than 10 characters for validation"))
                 .andExpect(jsonPath("$.content[0].category").value("Technology"))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.totalPages").value(1))
@@ -211,7 +230,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void findAllDrafts_ShouldReturnPageOfDrafts() throws Exception {
+    void findAllDrafts_ShouldReturnPageOfDrafts() throws Exception
+    {
         Page<ArticleResponseWithTitleAndStatusAndCategoryName> page = new PageImpl<>(
                 List.of(articleResponse),
                 PageRequest.of(0, 10),
@@ -235,14 +255,16 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void findById_ShouldReturnArticle() throws Exception {
+    void findById_ShouldReturnArticle() throws Exception
+    {
         Long articleId = 1L;
         when(articleService.findById(articleId)).thenReturn(articleResponse);
 
         mockMvc.perform(get("/verso/articles/{id}", articleId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Article Title Valid"))
-                .andExpect(jsonPath("$.content").value("This is a test content with more than 10 characters for validation"))
+                .andExpect(jsonPath("$.content").value(
+                        "This is a test content with more than 10 characters for validation"))
                 .andExpect(jsonPath("$.category").value("Technology"));
 
         verify(articleService, times(1)).findById(articleId);
@@ -250,7 +272,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void update_ShouldReturnUpdatedArticle() throws Exception {
+    void update_ShouldReturnUpdatedArticle() throws Exception
+    {
         Long articleId = 1L;
         when(articleService.update(eq(articleId), any(UpdateArticleRequestDTO.class)))
                 .thenReturn(articleResponse);
@@ -261,7 +284,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(updateArticleRequestDTO)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Test Article Title Valid"))
-                .andExpect(jsonPath("$.content").value("This is a test content with more than 10 characters for validation"))
+                .andExpect(jsonPath("$.content").value(
+                        "This is a test content with more than 10 characters for validation"))
                 .andExpect(jsonPath("$.category").value("Technology"));
 
         verify(articleService, times(1)).update(eq(articleId), any(UpdateArticleRequestDTO.class));
@@ -269,7 +293,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void update_ShouldReturnUnprocessableEntity_WhenContentIsTooShort() throws Exception {
+    void update_ShouldReturnUnprocessableEntity_WhenContentIsTooShort() throws Exception
+    {
         Long articleId = 1L;
         UpdateArticleRequestDTO invalidRequest = new UpdateArticleRequestDTO(
                 "Valid Title",
@@ -284,14 +309,16 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isUnprocessableEntity()) // 422
                 .andExpect(jsonPath("$.errors[0].fieldName").value("content"))
-                .andExpect(jsonPath("$.errors[0].message").value("Conteúdo deve ter pelo menos 10 caracteres"));
+                .andExpect(jsonPath("$.errors[0].message").value(
+                        "Conteúdo deve ter pelo menos 10 caracteres"));
 
         verify(articleService, never()).update(anyLong(), any(UpdateArticleRequestDTO.class));
     }
 
     @Test
     @WithMockUser
-    void update_ShouldReturnUnprocessableEntity_WhenTitleIsTooShort() throws Exception {
+    void update_ShouldReturnUnprocessableEntity_WhenTitleIsTooShort() throws Exception
+    {
         Long articleId = 1L;
         UpdateArticleRequestDTO invalidRequest = new UpdateArticleRequestDTO(
                 "AB", // título muito curto (min 3)
@@ -306,16 +333,19 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isUnprocessableEntity()) // 422
                 .andExpect(jsonPath("$.errors[0].fieldName").value("title"))
-                .andExpect(jsonPath("$.errors[0].message").value("Título deve ter entre 3 e 200 caracteres"));
+                .andExpect(jsonPath("$.errors[0].message").value(
+                        "Título deve ter entre 3 e 200 caracteres"));
 
         verify(articleService, never()).update(anyLong(), any(UpdateArticleRequestDTO.class));
     }
 
     @Test
     @WithMockUser
-    void delete_ShouldReturnNoContent() throws Exception {
+    void delete_ShouldReturnNoContent() throws Exception
+    {
         Long articleId = 1L;
-        doNothing().when(articleService).delete(articleId);
+        doNothing().when(articleService)
+                .delete(articleId);
 
         mockMvc.perform(delete("/verso/articles/{id}", articleId)
                         .with(csrf()))
@@ -325,7 +355,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void create_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception {
+    void create_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception
+    {
         mockMvc.perform(post("/verso/articles")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -336,7 +367,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void findAllPublished_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception {
+    void findAllPublished_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception
+    {
         mockMvc.perform(get("/verso/articles"))
                 .andExpect(status().isUnauthorized());
 
@@ -344,7 +376,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void findAllDrafts_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception {
+    void findAllDrafts_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception
+    {
         mockMvc.perform(get("/verso/articles/drafts"))
                 .andExpect(status().isUnauthorized());
 
@@ -352,7 +385,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void findById_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception {
+    void findById_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception
+    {
         mockMvc.perform(get("/verso/articles/1"))
                 .andExpect(status().isUnauthorized());
 
@@ -360,7 +394,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void update_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception {
+    void update_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception
+    {
         mockMvc.perform(put("/verso/articles/1")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -371,7 +406,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void delete_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception {
+    void delete_ShouldReturnUnauthorized_WhenNotAuthenticated() throws Exception
+    {
         mockMvc.perform(delete("/verso/articles/1")
                         .with(csrf()))
                 .andExpect(status().isUnauthorized());
@@ -381,7 +417,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void create_ShouldValidateMinimumValidData() throws Exception {
+    void create_ShouldValidateMinimumValidData() throws Exception
+    {
         // Teste com dados mínimos válidos
         CreateArticleRequestDTO minimalValidRequest = new CreateArticleRequestDTO(
                 "ABC", // mínimo 3 caracteres
@@ -413,7 +450,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
 
     @Test
     @WithMockUser
-    void create_ShouldReturnUnprocessableEntity_WhenMultipleValidationsFail() throws Exception {
+    void create_ShouldReturnUnprocessableEntity_WhenMultipleValidationsFail() throws Exception
+    {
         // Teste quando múltiplas validações falham - título vazio
         CreateArticleRequestDTO invalidRequest = new CreateArticleRequestDTO(
                 "", // título vazio - viola @NotBlank e @Size
@@ -428,7 +466,8 @@ class ArticleControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isUnprocessableEntity()) // 422
                 .andExpect(jsonPath("$.errors").isArray())
-                .andExpect(jsonPath("$.errors.length()").value(greaterThanOrEqualTo(4))); // 5 erros: título (2), conteúdo (1), categoria (1), status (1)
+                .andExpect(jsonPath("$.errors.length()").value(greaterThanOrEqualTo(
+                        4))); // 5 erros: título (2), conteúdo (1), categoria (1), status (1)
 
         verify(articleService, never()).create(any(CreateArticleRequestDTO.class));
     }

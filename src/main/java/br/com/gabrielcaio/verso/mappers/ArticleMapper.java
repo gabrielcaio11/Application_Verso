@@ -12,7 +12,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         imports = ArticleStatus.class)
-public interface ArticleMapper {
+public interface ArticleMapper
+{
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -27,5 +28,7 @@ public interface ArticleMapper {
     CreateArticleResponseDTO toCreateResponse(Article entity);
 
     @Mapping(source = "category.name", target = "category")
-    ArticleResponseWithTitleAndStatusAndCategoryName toResponseWithTitleAndStatusAndCategoryName(Article article);
+    ArticleResponseWithTitleAndStatusAndCategoryName toResponseWithTitleAndStatusAndCategoryName(
+            Article article
+    );
 }

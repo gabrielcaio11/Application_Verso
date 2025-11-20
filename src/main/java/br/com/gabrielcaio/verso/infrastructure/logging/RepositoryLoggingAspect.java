@@ -10,16 +10,24 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @Slf4j
-public class RepositoryLoggingAspect {
+public class RepositoryLoggingAspect
+{
 
     /**
-     * Intercepta todos os métodos públicos de todos os repositórios do pacote br.com.gabrielcaio.verso.repositories
-     * Inclui: save, findById, findAll, delete, query methods, @Query, etc.
+     * Intercepta todos os métodos públicos de todos os repositórios do pacote
+     * br.com.gabrielcaio.verso.repositories Inclui: save, findById, findAll, delete, query
+     * methods,
+     *
+     * @Query, etc.
      */
     @Before("within(br.com.gabrielcaio.verso.repositories..*) && execution(public * *(..))")
-    public void logBefore(JoinPoint joinPoint) {
-        String repository = joinPoint.getTarget().getClass().getSimpleName();
-        String method = joinPoint.getSignature().getName();
+    public void logBefore(JoinPoint joinPoint)
+    {
+        String repository = joinPoint.getTarget()
+                .getClass()
+                .getSimpleName();
+        String method = joinPoint.getSignature()
+                .getName();
 
         Object[] args = joinPoint.getArgs();
 
@@ -35,9 +43,13 @@ public class RepositoryLoggingAspect {
             pointcut = "within(br.com.gabrielcaio.verso.repositories..*) && execution(public * *(..))",
             returning = "result"
     )
-    public void logAfterReturning(JoinPoint joinPoint, Object result) {
-        String repository = joinPoint.getTarget().getClass().getSimpleName();
-        String method = joinPoint.getSignature().getName();
+    public void logAfterReturning(JoinPoint joinPoint, Object result)
+    {
+        String repository = joinPoint.getTarget()
+                .getClass()
+                .getSimpleName();
+        String method = joinPoint.getSignature()
+                .getName();
 
         log.info(
                 "[REPOSITORY RETURN] {}.{} | result={}",
@@ -48,47 +60,63 @@ public class RepositoryLoggingAspect {
     }
 
     /**
-     * Evita logs gigantes — especialmente entidades com:
-     * relações ManyToOne / OneToMany
+     * Evita logs gigantes — especialmente entidades com: relações ManyToOne / OneToMany
      */
-    private Object formatArguments(Object[] args) {
-        if (args == null || args.length == 0) {
+    private Object formatArguments(Object[] args)
+    {
+        if(args == null || args.length == 0)
+        {
             return "[]";
         }
 
         Object first = args[0];
 
         // Se for entidade, loga só o ID se existir
-        if (hasId(first)) {
+        if(hasId(first))
+        {
             return "entity-id=" + extractId(first);
         }
 
         return args;
     }
 
-    private Object formatReturn(Object result) {
-        if (result == null) return "null";
+    private Object formatReturn(Object result)
+    {
+        if(result == null)
+        {
+            return "null";
+        }
 
-        if (hasId(result)) {
+        if(hasId(result))
+        {
             return "entity-id=" + extractId(result);
         }
 
         return result;
     }
 
-    private boolean hasId(Object obj) {
-        try {
-            obj.getClass().getMethod("getId");
+    private boolean hasId(Object obj)
+    {
+        try
+        {
+            obj.getClass()
+                    .getMethod("getId");
             return true;
-        } catch (Exception ignored) {
+        } catch(Exception ignored)
+        {
             return false;
         }
     }
 
-    private Object extractId(Object obj) {
-        try {
-            return obj.getClass().getMethod("getId").invoke(obj);
-        } catch (Exception e) {
+    private Object extractId(Object obj)
+    {
+        try
+        {
+            return obj.getClass()
+                    .getMethod("getId")
+                    .invoke(obj);
+        } catch(Exception e)
+        {
             return "?";
         }
     }

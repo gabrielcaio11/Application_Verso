@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+
+    <!-- Anotações Lombok -->
+    <suppress checks=".*" files=".*Builder.*"/>
+    <suppress checks=".*" files=".*Slf4j.*"/>
+    <suppress checks=".*" files=".*Getter.*"/>
+    <suppress checks=".*" files=".*Setter.*"/>
+    <suppress checks=".*" files=".*EqualsAndHashCode.*"/>
+    <suppress checks=".*" files=".*NoArgsConstructor.*"/>
+    <suppress checks=".*" files=".*AllArgsConstructor.*"/>
+    <suppress checks=".*" files=".*RequiredArgsConstructor.*"/>
+    <suppress checks=".*" files=".*Data.*"/>
+    <suppress checks=".*" files=".*ToString.*"/>
+
+    <!-- Ignorar testes -->
+    <suppress checks=".*" files="src/test/java/.*"/>
+
+    <!-- Suprimir verificações de Javadoc para DTOs, entidades e configurações -->
+    <suppress checks="MissingJavadocMethod" files=".*[/\\]dto[/\\].*"/>
+    <suppress checks="MissingJavadocType" files=".*[/\\]dto[/\\].*"/>
+    <suppress checks="MissingJavadocMethod" files=".*[/\\]config[/\\].*"/>
+    <suppress checks="MissingJavadocType" files=".*[/\\]config[/\\].*"/>
+    <suppress checks="MissingJavadocMethod" files=".*[/\\]entity[/\\].*"/>
+    <suppress checks="MissingJavadocType" files=".*[/\\]entity[/\\].*"/>
+    <suppress checks="MissingJavadocMethod" files=".*[/\\]model[/\\].*"/>
+    <suppress checks="MissingJavadocType" files=".*[/\\]model[/\\].*"/>
+
+    <!-- Suprimir verificações de construtor para classes de utilidade -->
+    <suppress checks="HideUtilityClassConstructor" files=".*[/\\]config[/\\].*"/>
+    <suppress checks="HideUtilityClassConstructor" files=".*[/\\]util[/\\].*"/>
+
+</suppressions>

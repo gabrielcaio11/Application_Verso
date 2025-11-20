@@ -1,19 +1,19 @@
 package br.com.gabrielcaio.verso.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Map;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO com estatísticas de reações de um artigo")
-public class ArticleReactionStatsDTO {
+public class ArticleReactionStatsDTO
+{
 
     @Schema(description = "ID do artigo", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long articleId;

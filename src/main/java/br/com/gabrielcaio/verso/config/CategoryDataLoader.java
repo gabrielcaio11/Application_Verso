@@ -8,18 +8,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Order(2)
-public class CategoryDataLoader implements CommandLineRunner {
+public class CategoryDataLoader implements CommandLineRunner
+{
 
     private final CategoryRepository categoryRepository;
 
-    public CategoryDataLoader(CategoryRepository categoryRepository) {
+    public CategoryDataLoader(CategoryRepository categoryRepository)
+    {
         this.categoryRepository = categoryRepository;
     }
 
     @Override
-    public void run(String... args) {
+    public void run(String... args)
+    {
         String defaultName = "Sem categoria";
         categoryRepository.findByName(defaultName)
-                .orElseGet(() -> categoryRepository.save(Category.builder().name(defaultName).build()));
+                .orElseGet(() -> categoryRepository.save(Category.builder()
+                        .name(defaultName)
+                        .build()));
     }
 }

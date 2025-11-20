@@ -1,19 +1,19 @@
 package br.com.gabrielcaio.verso.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO de resposta com informações do artigo favoritado")
-public class FavoriteResponseDTO {
+public class FavoriteResponseDTO
+{
 
     @Schema(
             description = "ID do favorito",

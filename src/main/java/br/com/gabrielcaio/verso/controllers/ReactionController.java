@@ -23,14 +23,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/verso/reactions")
 @RequiredArgsConstructor
 @Tag(name = "Reactions", description = "Endpoints para gerenciamento de reações em artigos")
 @Slf4j
-public class ReactionController {
+public class ReactionController
+{
 
     private final ReactionService reactionService;
 
@@ -38,7 +45,7 @@ public class ReactionController {
             summary = "Adicionar ou atualizar reação em um artigo",
             description = "Adiciona uma nova reação ou atualiza a reação existente do usuário autenticado em um artigo publicado. Se o usuário já reagiu, a reação será atualizada."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Reação adicionada/atualizada com sucesso",
@@ -58,18 +65,23 @@ public class ReactionController {
                     required = true
             ) @PathVariable Long articleId,
             @Valid @RequestBody CreateReactionRequestDTO dto
-    ) {
-        log.info("Adicionando/atualizando reação para o artigo ID: {} com tipo de reação: {}", articleId, dto.getType());
+    )
+    {
+        log.info(
+                "Adicionando/atualizando reação para o artigo ID: {} com tipo de reação: {}",
+                articleId, dto.getType()
+        );
         var response = reactionService.addOrUpdateReaction(articleId, dto);
         log.info("Reação adicionada/atualizada com sucesso para o artigo ID: {}", articleId);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     @Operation(
             summary = "Remover reação de um artigo",
             description = "Remove a reação do usuário autenticado de um artigo."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "204", description = "Reação removida com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "404", description = "Reação não encontrada"),
@@ -82,18 +94,20 @@ public class ReactionController {
                     example = "1",
                     required = true
             ) @PathVariable Long articleId
-    ) {
+    )
+    {
         log.info("Removendo reação para o artigo ID: {}", articleId);
         reactionService.removeReaction(articleId);
         log.info("Reação removida com sucesso para o artigo ID: {}", articleId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Operation(
             summary = "Listar reações de um artigo",
             description = "Retorna uma lista paginada de todas as reações de um artigo específico."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de reações retornada com sucesso",
@@ -103,7 +117,7 @@ public class ReactionController {
             @ApiResponse(responseCode = "404", description = "Artigo não encontrado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -138,18 +152,26 @@ public class ReactionController {
             )
             @PathVariable Long articleId,
             @ParameterObject Pageable pageable
-    ) {
-        log.info("Buscando reações para o artigo ID: {}. Página: {}, Tamanho: {}", articleId, pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando reações para o artigo ID: {}. Página: {}, Tamanho: {}", articleId,
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = reactionService.findAllReactionsByArticle(articleId, pageable);
-        log.info("Total de reações encontradas para o artigo ID {}: {}", articleId, pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        log.info(
+                "Total de reações encontradas para o artigo ID {}: {}", articleId,
+                pageResponse.getTotalElements()
+        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Listar reações do usuário autenticado",
             description = "Retorna uma lista paginada de todas as reações feitas pelo usuário autenticado."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de reações retornada com sucesso",
@@ -158,7 +180,7 @@ public class ReactionController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -188,18 +210,26 @@ public class ReactionController {
     public ResponseEntity<Page<ReactionResponseDTO>> findAllReactionsByUser(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando reações do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando reações do usuário autenticado. Página: {}, Tamanho: {}",
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = reactionService.findAllReactionsByUser(pageable);
-        log.info("Total de reações encontradas para o usuário autenticado: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        log.info(
+                "Total de reações encontradas para o usuário autenticado: {}",
+                pageResponse.getTotalElements()
+        );
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Obter estatísticas de reações de um artigo",
             description = "Retorna estatísticas detalhadas das reações de um artigo, incluindo contagem por tipo e a reação do usuário autenticado."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Estatísticas retornadas com sucesso",
@@ -217,18 +247,20 @@ public class ReactionController {
                     required = true
             )
             @PathVariable Long articleId
-    ) {
+    )
+    {
         log.info("Buscando estatísticas de reações para o artigo ID: {}", articleId);
         var stats = reactionService.getArticleReactionStats(articleId);
         log.info("Estatísticas de reações obtidas com sucesso para o artigo ID: {}", articleId);
-        return ResponseEntity.status(HttpStatus.OK).body(stats);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(stats);
     }
 
     @Operation(
             summary = "Verificar reação do usuário em um artigo",
             description = "Retorna o tipo de reação do usuário autenticado em um artigo específico, ou null se não reagiu."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Reação do usuário retornada com sucesso",
@@ -246,10 +278,12 @@ public class ReactionController {
                     required = true
             )
             @PathVariable Long articleId
-    ) {
+    )
+    {
         log.info("Buscando reação do usuário para o artigo ID: {}", articleId);
         ReactionType reaction = reactionService.getUserReaction(articleId);
         log.info("Reação do usuário obtida com sucesso para o artigo ID: {}", articleId);
-        return ResponseEntity.status(HttpStatus.OK).body(reaction);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(reaction);
     }
 }

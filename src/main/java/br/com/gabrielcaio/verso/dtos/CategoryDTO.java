@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Representação de uma categoria")
-public class CategoryDTO {
+public class CategoryDTO
+{
 
     @Schema(description = "ID único da categoria", example = "1")
     private Long id;

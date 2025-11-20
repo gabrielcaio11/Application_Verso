@@ -6,16 +6,16 @@ import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.repositories.CategoryRepository;
 import br.com.gabrielcaio.verso.repositories.RolesRepository;
 import br.com.gabrielcaio.verso.repositories.UserRepository;
+import java.util.Set;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Component
 @Profile("test")
-public class TestDataLoader implements CommandLineRunner {
+public class TestDataLoader implements CommandLineRunner
+{
 
     private final UserRepository userRepository;
     private final RolesRepository rolesRepository;
@@ -27,7 +27,8 @@ public class TestDataLoader implements CommandLineRunner {
             RolesRepository rolesRepository,
             CategoryRepository categoryRepository,
             PasswordEncoder passwordEncoder
-    ) {
+    )
+    {
         this.userRepository = userRepository;
         this.rolesRepository = rolesRepository;
         this.categoryRepository = categoryRepository;
@@ -35,7 +36,8 @@ public class TestDataLoader implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) throws Exception
+    {
         // Limpar dados existentes para garantir estado consistente
         userRepository.deleteAll();
         rolesRepository.deleteAll();
@@ -43,7 +45,8 @@ public class TestDataLoader implements CommandLineRunner {
 
         // Criar ROLE USER se não existir
         Roles roleUser = rolesRepository.findByName("USER")
-                .orElseGet(() -> {
+                .orElseGet(() ->
+                {
                     Roles role = new Roles();
                     role.setName("USER");
                     return rolesRepository.save(role);
@@ -51,7 +54,8 @@ public class TestDataLoader implements CommandLineRunner {
 
         // Criar ROLE ADMIN se não existir
         Roles roleAdmin = rolesRepository.findByName("ADMIN")
-                .orElseGet(() -> {
+                .orElseGet(() ->
+                {
                     Roles role = new Roles();
                     role.setName("ADMIN");
                     return rolesRepository.save(role);

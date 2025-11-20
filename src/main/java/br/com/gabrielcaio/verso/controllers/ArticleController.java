@@ -24,14 +24,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/verso/articles")
 @RequiredArgsConstructor
 @Tag(name = "Articles", description = "Article management APIs")
 @Slf4j
-public class ArticleController {
+public class ArticleController
+{
 
     private final ArticleService articleService;
 
@@ -39,7 +47,7 @@ public class ArticleController {
             summary = "Create new article",
             description = "Creates a new article. Authenticated user will be set as author automatically."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "201",
                     description = "Article created successfully",
@@ -69,17 +77,19 @@ public class ArticleController {
     @PostMapping
     public ResponseEntity<CreateArticleResponseDTO> create(
             @Valid @RequestBody CreateArticleRequestDTO dto
-    ) {
+    )
+    {
         log.info("Creating article with title={} and status={}", dto.getTitle(), dto.getStatus());
         var response = articleService.create(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @Operation(
             summary = "Buscar todos os artigos publicados com paginação",
             description = "Retorna uma lista paginada de artigos com status PUBLICADO. Apenas artigos publicados são visíveis."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de artigos retornada com sucesso",
@@ -96,7 +106,7 @@ public class ArticleController {
                     content = @Content(schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -126,17 +136,22 @@ public class ArticleController {
     public ResponseEntity<Page<ArticleResponseWithTitleAndStatusAndCategoryName>> findAllPublished(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando todos os artigos publicados. Página={}, Tamanho={}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando todos os artigos publicados. Página={}, Tamanho={}",
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = articleService.findAllArticlesPublicados(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Buscar artigos em rascunho do usuário autenticado",
             description = "Retorna uma lista paginada de artigos com status RASCUNHO do usuário autenticado. Apenas o autor pode ver seus próprios rascunhos."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de rascunhos retornada com sucesso",
@@ -153,7 +168,7 @@ public class ArticleController {
                     content = @Content(schema = @Schema(implementation = ErrorMessage.class))
             )
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -183,17 +198,22 @@ public class ArticleController {
     public ResponseEntity<Page<ArticleResponseWithTitleAndStatusAndCategoryName>> findAllDrafts(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando rascunhos do usuário autenticado. Página={}, Tamanho={}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando rascunhos do usuário autenticado. Página={}, Tamanho={}",
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = articleService.findAllArticlesRascunho(pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Buscar artigo por ID",
             description = "Retorna um artigo específico. Artigos PUBLICADOS podem ser visualizados por qualquer usuário autenticado. Artigos RASCUNHO só podem ser visualizados pelo autor."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Artigo encontrado",
@@ -228,17 +248,19 @@ public class ArticleController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Buscando artigo por ID={}", id);
         var response = articleService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     @Operation(
             summary = "Atualizar artigo",
             description = "Atualiza um artigo existente. Apenas o autor pode atualizar seus próprios artigos."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Artigo atualizado com sucesso",
@@ -284,17 +306,19 @@ public class ArticleController {
             )
             @PathVariable Long id,
             @Valid @RequestBody UpdateArticleRequestDTO dto
-    ) {
+    )
+    {
         log.info("Atualizando artigo id={} com novos dados", id);
         var response = articleService.update(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     @Operation(
             summary = "Deletar artigo",
             description = "Exclui um artigo. Apenas o autor pode excluir seus próprios artigos."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "204",
                     description = "Artigo deletado com sucesso"
@@ -328,9 +352,11 @@ public class ArticleController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Requisição para deletar artigo id={}", id);
         articleService.delete(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

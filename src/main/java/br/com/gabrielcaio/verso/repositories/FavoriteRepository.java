@@ -3,15 +3,15 @@ package br.com.gabrielcaio.verso.repositories;
 import br.com.gabrielcaio.verso.domain.entity.Favorite;
 import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.domain.enums.ArticleStatus;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
-
-public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
+public interface FavoriteRepository extends JpaRepository<Favorite, Long>
+{
 
     Optional<Favorite> findByUserAndArticleId(User user, Long articleId);
 

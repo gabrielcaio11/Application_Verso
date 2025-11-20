@@ -3,7 +3,8 @@
 ## 1. Visão Geral
 
 O Verso é uma plataforma voltada à criação, publicação e gerenciamento de artigos por usuários.  
-Seu principal objetivo é permitir o compartilhamento de conhecimento de forma estruturada e organizada.
+Seu principal objetivo é permitir o compartilhamento de conhecimento de forma estruturada e
+organizada.
 
 ---
 

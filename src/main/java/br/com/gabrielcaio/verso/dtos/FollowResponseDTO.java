@@ -1,19 +1,19 @@
 package br.com.gabrielcaio.verso.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO de resposta com informações de seguimento")
-public class FollowResponseDTO {
+public class FollowResponseDTO
+{
 
     @Schema(description = "ID do relacionamento de seguimento", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long followId;

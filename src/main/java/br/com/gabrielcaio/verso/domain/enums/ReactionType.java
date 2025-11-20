@@ -3,7 +3,8 @@ package br.com.gabrielcaio.verso.domain.enums;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Tipo de reação que pode ser aplicada a um artigo")
-public enum ReactionType {
+public enum ReactionType
+{
 
     @Schema(description = "Curtir - indica que o usuário gostou do artigo")
     LIKE,

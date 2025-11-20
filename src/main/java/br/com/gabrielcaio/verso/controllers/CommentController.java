@@ -22,14 +22,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/verso")
 @RequiredArgsConstructor
 @Tag(name = "Comments", description = "Endpoints para comentários em artigos")
 @Slf4j
-public class CommentController {
+public class CommentController
+{
 
     private final CommentService commentService;
 
@@ -37,7 +44,7 @@ public class CommentController {
             summary = "Comentar artigo",
             description = "Cria um novo comentário em um artigo (use parentId para responder)"
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Comentário criado com sucesso",
@@ -47,24 +54,28 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Não autorizado - autenticação necessária"),
             @ApiResponse(responseCode = "422", description = "Erro de validação"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
-
     })
     @PostMapping("/article/{articleId}/comments")
     public ResponseEntity<CommentResponseDTO> create(
             @PathVariable Long articleId,
             @Valid @RequestBody CreateCommentRequestDTO dto
-    ) {
-        log.info("Recebida requisição para criar comentario no artigo com id {} e com conteudo: {}", articleId, dto.getContent());
+    )
+    {
+        log.info(
+                "Recebida requisição para criar comentario no artigo com id {} e com conteudo: {}",
+                articleId, dto.getContent()
+        );
         var entity = commentService.create(articleId, dto);
         log.info("Comentario criado com sucesso.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(entity);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(entity);
     }
 
     @Operation(
             summary = "Listar comentários do artigo (flat)",
             description = "Lista todos os comentários em ordem cronológica"
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de comentarios retornada com sucesso",
@@ -73,7 +84,7 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -104,18 +115,23 @@ public class CommentController {
             @PathVariable Long articleId,
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando comentarios do artigo: {}. Página: {}, Tamanho: {}", articleId, pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando comentarios do artigo: {}. Página: {}, Tamanho: {}", articleId,
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = commentService.listFlatByArticle(articleId, pageable);
         log.info("Total de comentarios encontrados: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Listar comentários do artigo (threaded)",
             description = "Lista comentários raiz paginados, com respostas aninhadas"
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de comentarios retornada com sucesso",
@@ -124,7 +140,7 @@ public class CommentController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -160,18 +176,23 @@ public class CommentController {
             @PathVariable Long id,
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando rascunhos do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando rascunhos do usuário autenticado. Página: {}, Tamanho: {}",
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = commentService.listThreadedByArticle(id, pageable);
         log.info("Total de comentarios encontrados threaded: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Excluir comentário",
             description = "Autor do comentário ou autor do artigo podem remover"
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "204", description = "Comentario deletado com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "403", description = "Acesso negado - você só pode excluir seus próprios comentários ou os do seu artigo"),
@@ -186,10 +207,12 @@ public class CommentController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Requisição para deletar comentario ID: {}", id);
         commentService.delete(id);
         log.info("Comentario ID: {} deletado com sucesso", id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

@@ -13,7 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO de requisição para criar ou atualizar uma reação")
-public class CreateReactionRequestDTO {
+public class CreateReactionRequestDTO
+{
 
     @NotNull(message = "Tipo de reação é obrigatório")
     @Schema(description = "Tipo de reação (LIKE, LOVE, LAUGH, WOW, SAD, ANGRY)", example = "LIKE", requiredMode = Schema.RequiredMode.REQUIRED)

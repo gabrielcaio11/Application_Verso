@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
@@ -21,16 +22,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/verso/users")
 @RequiredArgsConstructor
 @Tag(name = "Users", description = "Endpoints para gerenciamento de usuários")
 @Slf4j
-public class UserController {
+public class UserController
+{
 
     private final UserService userService;
 
@@ -38,7 +42,7 @@ public class UserController {
             summary = "Registro de novo usuário",
             description = "Cria um novo usuário no sistema. O email deve ser único."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos"),
             @ApiResponse(responseCode = "422", description = "Erro de validação - email já cadastrado"),
@@ -47,18 +51,20 @@ public class UserController {
     @PostMapping
     public ResponseEntity<Void> register(
             @Valid @RequestBody UserDTO dto
-    ) {
+    )
+    {
         log.info("Registrando novo usuário com email: {}", dto.getEmail());
         userService.register(dto);
         log.info("Usuário registrado com sucesso com email: {}", dto.getEmail());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .build();
     }
 
     @Operation(
             summary = "Buscar todos os usuários",
             description = "Retorna uma lista de todos os usernames cadastrados. Apenas usuários com perfil ADMIN podem acessar."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de usuários retornada com sucesso",
@@ -68,7 +74,7 @@ public class UserController {
             @ApiResponse(responseCode = "403", description = "Acesso negado - apenas ADMIN pode listar usuários"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -99,10 +105,15 @@ public class UserController {
     public ResponseEntity<Page<String>> findAll(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando todos os usuários. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando todos os usuários. Página: {}, Tamanho: {}", pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
         var pageResponse = userService.findAll(pageable);
         log.info("Total de usuários encontrados: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 }

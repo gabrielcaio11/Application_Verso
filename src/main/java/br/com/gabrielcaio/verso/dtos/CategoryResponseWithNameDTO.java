@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Representação de um response de categoria")
-public class CategoryResponseWithNameDTO {
+public class CategoryResponseWithNameDTO
+{
     @Schema(description = "Nome da categoria", example = "Tecnologia", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 }

@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO de resposta para criação de artigo")
-public class CreateArticleResponseDTO {
+public class CreateArticleResponseDTO
+{
 
     @Schema(
             description = "Título do artigo criado",

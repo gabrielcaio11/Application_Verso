@@ -8,28 +8,32 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
-
 @Configuration
-public class OpenApiConfiguration {
+public class OpenApiConfiguration
+{
     private static final String SECURITY_SCHEME_NAME = "basicAuth";
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI customOpenAPI()
+    {
         return new OpenAPI()
                 .components(new Components()
-                        .addSecuritySchemes(SECURITY_SCHEME_NAME,
+                        .addSecuritySchemes(
+                                SECURITY_SCHEME_NAME,
                                 new SecurityScheme()
                                         .type(SecurityScheme.Type.HTTP)
-                                        .scheme("basic")))
+                                        .scheme("basic")
+                        ))
                 .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
                 .info(new Info()
                         .title("Application Verso")
                         .version("v1")
-                        .description("API REST para sistema de criação, publicação e gerenciamento de artigos")
+                        .description(
+                                "API REST para sistema de criação, publicação e gerenciamento de artigos")
                         .contact(new Contact()
                                 .name("Gabriel Caio")
                                 .email("gabrielcaio848@gmail.com")

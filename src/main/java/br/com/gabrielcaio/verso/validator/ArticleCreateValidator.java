@@ -11,19 +11,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ArticleCreateValidator {
+public class ArticleCreateValidator
+{
     private final ArticleRepository articleRepository;
 
-    public void validate(Article article, User author, Category category) {
+    public void validate(Article article, User author, Category category)
+    {
         boolean exists = articleRepository.existsByAuthorIdAndTitleIgnoreCase(
                 author.getId(), article.getTitle());
-        if (exists) {
+        if(exists)
+        {
             throw new EntityExistsException(
                     "Author(" + author.getUsername() + ") já possui um artigo com esse título");
         }
 
         // validar status
-        if (article.getStatus() == null) {
+        if(article.getStatus() == null)
+        {
             article.setStatus(ArticleStatus.RASCUNHO);
         }
     }

@@ -11,7 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO com informações básicas do perfil de usuário")
-public class UserProfileDTO {
+public class UserProfileDTO
+{
 
     @Schema(
             description = "ID do usuário",

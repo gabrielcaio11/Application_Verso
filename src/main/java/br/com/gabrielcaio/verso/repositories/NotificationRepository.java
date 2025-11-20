@@ -10,11 +10,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 
-public interface NotificationRepository extends JpaRepository<Notification, Long> {
+public interface NotificationRepository extends JpaRepository<Notification, Long>
+{
 
     Page<Notification> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 
-    Page<Notification> findAllByUserAndReadOrderByCreatedAtDesc(User user, boolean read, Pageable pageable);
+    Page<Notification> findAllByUserAndReadOrderByCreatedAtDesc(
+            User user, boolean read, Pageable pageable
+    );
 
     long countByUserAndRead(User user, boolean read);
 

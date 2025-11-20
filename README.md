@@ -11,12 +11,16 @@
 
 ## 📋 Sobre o Projeto
 
-O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em **Java 21** com **Spring Boot**. A
-aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com controle de acesso baseado
+O **Verso** é uma plataforma de publicação e gerenciamento de artigos desenvolvida em **Java 21**
+com **Spring Boot**. A
+aplicação permite que usuários criem, publiquem e gerenciem artigos de forma estruturada, com
+controle de acesso baseado
 em perfis de usuário (comum e administrador).
 
-A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**, oferecendo recursos como categorização
-de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de interações (comentários,
+A plataforma foi projetada para facilitar o **compartilhamento de conhecimento**, oferecendo
+recursos como categorização
+de artigos, sistema de rascunhos, controle de publicação, gerenciamento de usuários, sistema de
+interações (comentários,
 reações e favoritos) e notificações.
 
 ---
@@ -110,7 +114,8 @@ reações e favoritos) e notificações.
         - Autor do comentário é notificado ao receber uma resposta
 
 - **Sistema de Curtidas e Reações**
-    - Reagir a artigos publicados com diferentes tipos de reação (LIKE, LOVE, LAUGH, WOW, SAD, ANGRY)
+    - Reagir a artigos publicados com diferentes tipos de reação (LIKE, LOVE, LAUGH, WOW, SAD,
+      ANGRY)
     - Adicionar ou atualizar reação em um artigo
     - Remover reação de um artigo
     - Listar todas as reações de um artigo com paginação

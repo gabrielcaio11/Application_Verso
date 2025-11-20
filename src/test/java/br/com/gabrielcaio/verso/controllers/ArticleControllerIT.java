@@ -8,22 +8,27 @@ import br.com.gabrielcaio.verso.dtos.UpdateArticleRequestDTO;
 import br.com.gabrielcaio.verso.repositories.ArticleRepository;
 import br.com.gabrielcaio.verso.repositories.CategoryRepository;
 import br.com.gabrielcaio.verso.repositories.UserRepository;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class ArticleControllerIT extends BaseIntegrationTest {
+class ArticleControllerIT extends BaseIntegrationTest
+{
 
     @LocalServerPort
     private int port;
@@ -43,22 +48,26 @@ class ArticleControllerIT extends BaseIntegrationTest {
     private String baseUrl;
 
     @BeforeEach
-    void setup() {
+    void setup()
+    {
         baseUrl = "http://localhost:" + port + "/verso/articles";
         // Limpa os artigos antes de cada teste para garantir isolamento
         articleRepository.deleteAll();
     }
 
-    private TestRestTemplate restTemplateForAdmin() {
+    private TestRestTemplate restTemplateForAdmin()
+    {
         return restTemplate.withBasicAuth("admin@test.com", "123456");
     }
 
-    private TestRestTemplate restTemplateForUser() {
+    private TestRestTemplate restTemplateForUser()
+    {
         return restTemplate.withBasicAuth("user@test.com", "123456");
     }
 
     @Test
-    void shouldCreateArticle() {
+    void shouldCreateArticle()
+    {
         CreateArticleRequestDTO dto = new CreateArticleRequestDTO(
                 "Meu artigo de teste",
                 "Conteúdo do artigo com mais de 10 caracteres para passar na validação",
@@ -74,12 +83,15 @@ class ArticleControllerIT extends BaseIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
-        assertThat(response.getBody().getTitle()).isEqualTo("Meu artigo de teste");
-        assertThat(response.getBody().getCategory()).isEqualTo("Tecnologia");
+        assertThat(response.getBody()
+                .getTitle()).isEqualTo("Meu artigo de teste");
+        assertThat(response.getBody()
+                .getCategory()).isEqualTo("Tecnologia");
     }
 
     @Test
-    void shouldReturnUnauthorizedWithoutAuth() {
+    void shouldReturnUnauthorizedWithoutAuth()
+    {
         CreateArticleRequestDTO dto = new CreateArticleRequestDTO(
                 "Teste sem auth",
                 "Conteúdo com mais de 10 caracteres",
@@ -97,7 +109,8 @@ class ArticleControllerIT extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldListPublishedArticles() {
+    void shouldListPublishedArticles()
+    {
         // Primeiro criar um artigo publicado
         CreateArticleRequestDTO dto = new CreateArticleRequestDTO(
                 "Artigo Publicado para Listagem",
@@ -119,7 +132,8 @@ class ArticleControllerIT extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldUpdateOwnArticle() {
+    void shouldUpdateOwnArticle()
+    {
         // Primeiro criar um artigo
         CreateArticleRequestDTO createDto = new CreateArticleRequestDTO(
                 "Artigo Original para Update",
@@ -137,10 +151,12 @@ class ArticleControllerIT extends BaseIntegrationTest {
         assertThat(createResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         // Buscar o artigo criado para obter o ID
-        Optional<Article> createdArticle = articleRepository.findByTitle("Artigo Original para Update");
+        Optional<Article> createdArticle = articleRepository.findByTitle(
+                "Artigo Original para Update");
         assertThat(createdArticle).isPresent();
 
-        Long articleId = createdArticle.get().getId();
+        Long articleId = createdArticle.get()
+                .getId();
 
         // Atualizar o artigo
         UpdateArticleRequestDTO updateDto = new UpdateArticleRequestDTO(
@@ -167,7 +183,8 @@ class ArticleControllerIT extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldDeleteArticle() {
+    void shouldDeleteArticle()
+    {
         // Primeiro criar um artigo
         CreateArticleRequestDTO createDto = new CreateArticleRequestDTO(
                 "Artigo para Deletar",
@@ -182,7 +199,8 @@ class ArticleControllerIT extends BaseIntegrationTest {
         Optional<Article> createdArticle = articleRepository.findByTitle("Artigo para Deletar");
         assertThat(createdArticle).isPresent();
 
-        Long articleId = createdArticle.get().getId();
+        Long articleId = createdArticle.get()
+                .getId();
 
         // Deletar o artigo
         ResponseEntity<Void> response = restTemplateForUser().exchange(
@@ -200,7 +218,8 @@ class ArticleControllerIT extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldGetArticleById() {
+    void shouldGetArticleById()
+    {
         // Primeiro criar um artigo
         CreateArticleRequestDTO createDto = new CreateArticleRequestDTO(
                 "Artigo para Buscar por ID",
@@ -212,10 +231,12 @@ class ArticleControllerIT extends BaseIntegrationTest {
         restTemplateForUser().postForEntity(baseUrl, createDto, CreateArticleResponseDTO.class);
 
         // Buscar o artigo criado para obter o ID
-        Optional<Article> createdArticle = articleRepository.findByTitle("Artigo para Buscar por ID");
+        Optional<Article> createdArticle = articleRepository.findByTitle(
+                "Artigo para Buscar por ID");
         assertThat(createdArticle).isPresent();
 
-        Long articleId = createdArticle.get().getId();
+        Long articleId = createdArticle.get()
+                .getId();
 
         // Buscar o artigo por ID
         ResponseEntity<String> response = restTemplateForUser().getForEntity(
@@ -228,7 +249,8 @@ class ArticleControllerIT extends BaseIntegrationTest {
     }
 
     @Test
-    void shouldListDrafts() {
+    void shouldListDrafts()
+    {
         // Primeiro criar um rascunho
         CreateArticleRequestDTO dto = new CreateArticleRequestDTO(
                 "Meu Rascunho",

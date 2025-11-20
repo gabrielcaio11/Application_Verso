@@ -23,7 +23,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -31,7 +38,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Tag(name = "Categories", description = "Endpoints para gerenciamento de categorias (apenas ADMIN)")
 @Slf4j
-public class CategoryController {
+public class CategoryController
+{
 
     private final CategoryService categoryService;
 
@@ -39,7 +47,7 @@ public class CategoryController {
             summary = "Listar todas as categorias",
             description = "Retorna uma lista de todas as categorias cadastradas no sistema."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de categorias retornada com sucesso",
@@ -48,7 +56,7 @@ public class CategoryController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -78,18 +86,23 @@ public class CategoryController {
     public ResponseEntity<Page<CategoryResponseWithNameDTO>> findAll(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando todas as categorias. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando todas as categorias. Página: {}, Tamanho: {}", pageable.getPageNumber(),
+                pageable.getPageSize()
+        );
         var pageResponse = categoryService.findAll(pageable);
         log.info("Total de categorias encontradas: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Buscar categoria por ID",
             description = "Retorna uma categoria específica baseada no ID fornecido."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Categoria encontrada",
@@ -107,18 +120,20 @@ public class CategoryController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Buscando categoria por ID: {}", id);
         var response = categoryService.findById(id);
         log.info("Artigo encontrado: {}", response.getName());
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     @Operation(
             summary = "Criar nova categoria",
             description = "Cria uma nova categoria. Apenas usuários com perfil ADMIN podem criar categorias."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Categoria criada com sucesso",
@@ -134,18 +149,20 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<CategoryResponseWithNameDTO> create(
             @Valid @RequestBody CreateCategoryRequestDTO dto
-    ) {
+    )
+    {
         log.info("Recebida requisição para criar categoria com nome: {}", dto.getName());
         var response = categoryService.create(dto);
         log.info("Artigo criado com sucesso.");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @Operation(
             summary = "Atualizar categoria",
             description = "Atualiza uma categoria existente. Apenas usuários com perfil ADMIN podem atualizar categorias."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Categoria atualizada com sucesso",
@@ -168,18 +185,20 @@ public class CategoryController {
             )
             @PathVariable Long id,
             @Valid @RequestBody UpdateCategoryRequestDTO dto
-    ) {
+    )
+    {
         log.info("Atualizando categoria ID: {} com novos dados", id);
         var response = categoryService.update(id, dto);
         log.info("Artigo ID: {} atualizado com sucesso", id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(response);
     }
 
     @Operation(
             summary = "Deletar categoria",
             description = "Exclui uma categoria. Ao excluir, todos os artigos associados serão movidos para a categoria 'Sem categoria'. Apenas usuários com perfil ADMIN podem excluir categorias."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "204", description = "Categoria deletada com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "403", description = "Acesso negado - apenas ADMIN pode excluir categorias"),
@@ -196,10 +215,12 @@ public class CategoryController {
                     required = true
             )
             @PathVariable Long id
-    ) {
+    )
+    {
         log.info("Requisição para deletar categoria ID: {}", id);
         categoryService.delete(id);
         log.info("Categoria ID: {} deletado com sucesso", id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 }

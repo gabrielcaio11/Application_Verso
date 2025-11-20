@@ -1,6 +1,12 @@
 package br.com.gabrielcaio.verso.domain.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +21,8 @@ import org.springframework.security.core.GrantedAuthority;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Roles implements GrantedAuthority {
+public class Roles implements GrantedAuthority
+{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +33,14 @@ public class Roles implements GrantedAuthority {
     private String name;
 
     @Override
-    public String getAuthority() {
+    public String getAuthority()
+    {
         return name;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "{\"identifier\":\"" + id + "\", \"name\":\"" + name + "\"}";
     }
 }

@@ -7,7 +7,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateCommentRequestDTO {
+public class CreateCommentRequestDTO
+{
     @NotBlank
     @Size(min = 1, max = 5000)
     private String content;

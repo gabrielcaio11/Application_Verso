@@ -1,14 +1,14 @@
 package br.com.gabrielcaio.verso.dtos;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
-public class ThreadedCommentDTO {
+public class ThreadedCommentDTO
+{
     private Long id;
     private String content;
     private Long authorId;

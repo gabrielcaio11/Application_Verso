@@ -19,14 +19,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
 @RequestMapping("/verso/notifications")
 @RequiredArgsConstructor
 @Tag(name = "Notifications", description = "Endpoints para gerenciamento de notificações")
-public class NotificationController {
+public class NotificationController
+{
 
     private final NotificationService notificationService;
 
@@ -34,7 +39,7 @@ public class NotificationController {
             summary = "Listar todas as notificações",
             description = "Retorna uma lista paginada de todas as notificações do usuário autenticado, ordenadas por data de criação (mais recentes primeiro)."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de notificações retornada com sucesso",
@@ -43,7 +48,7 @@ public class NotificationController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -73,18 +78,23 @@ public class NotificationController {
     public ResponseEntity<Page<NotificationResponseDTO>> getAllNotifications(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando notificações do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando notificações do usuário autenticado. Página: {}, Tamanho: {}",
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = notificationService.getAllNotifications(pageable);
         log.info("Total de notificações encontradas: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Listar notificações não lidas",
             description = "Retorna uma lista paginada de notificações não lidas do usuário autenticado."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Lista de notificações não lidas retornada com sucesso",
@@ -93,7 +103,7 @@ public class NotificationController {
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
-    @Parameters({
+    @Parameters( {
             @Parameter(
                     in = ParameterIn.QUERY,
                     name = "page",
@@ -123,18 +133,24 @@ public class NotificationController {
     public ResponseEntity<Page<NotificationResponseDTO>> getUnreadNotifications(
             @ParameterObject
             Pageable pageable
-    ) {
-        log.info("Buscando notificações não lidas do usuário autenticado. Página: {}, Tamanho: {}", pageable.getPageNumber(), pageable.getPageSize());
+    )
+    {
+        log.info(
+                "Buscando notificações não lidas do usuário autenticado. Página: {}, Tamanho: {}",
+                pageable.getPageNumber(), pageable.getPageSize()
+        );
         var pageResponse = notificationService.getUnreadNotifications(pageable);
-        log.info("Total de notificações não lidas encontradas: {}", pageResponse.getTotalElements());
-        return ResponseEntity.status(HttpStatus.OK).body(pageResponse);
+        log.info(
+                "Total de notificações não lidas encontradas: {}", pageResponse.getTotalElements());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(pageResponse);
     }
 
     @Operation(
             summary = "Marcar notificação como lida",
             description = "Marca uma notificação específica como lida."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "204", description = "Notificação marcada como lida com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "404", description = "Notificação não encontrada"),
@@ -148,35 +164,39 @@ public class NotificationController {
                     required = true
             )
             @PathVariable Long notificationId
-    ) {
+    )
+    {
         log.info("Marcando notificação {} como lida", notificationId);
         notificationService.markAsRead(notificationId);
         log.info("Notificação {} marcada como lida com sucesso", notificationId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Operation(
             summary = "Marcar todas as notificações como lidas",
             description = "Marca todas as notificações do usuário autenticado como lidas."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(responseCode = "204", description = "Todas as notificações marcadas como lidas com sucesso"),
             @ApiResponse(responseCode = "401", description = "Não autorizado"),
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @PatchMapping("/read-all")
-    public ResponseEntity<Void> markAllAsRead() {
+    public ResponseEntity<Void> markAllAsRead()
+    {
         log.info("Marcando todas as notificações como lidas para o usuário autenticado");
         notificationService.markAllAsRead();
         log.info("Todas as notificações marcadas como lidas com sucesso");
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .build();
     }
 
     @Operation(
             summary = "Contar notificações não lidas",
             description = "Retorna o número de notificações não lidas do usuário autenticado."
     )
-    @ApiResponses({
+    @ApiResponses( {
             @ApiResponse(
                     responseCode = "200",
                     description = "Contagem de notificações não lidas retornada com sucesso"
@@ -185,10 +205,12 @@ public class NotificationController {
             @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
     })
     @GetMapping("/unread/count")
-    public ResponseEntity<Long> getUnreadCount() {
+    public ResponseEntity<Long> getUnreadCount()
+    {
         log.info("Contando notificações não lidas para o usuário autenticado");
         long count = notificationService.getUnreadCount();
         log.info("Número de notificações não lidas: {}", count);
-        return ResponseEntity.status(HttpStatus.OK).body(count);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(count);
     }
 }

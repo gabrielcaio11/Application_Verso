@@ -1,20 +1,20 @@
 package br.com.gabrielcaio.verso.dtos;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO para criação e gerenciamento de usuários")
-public class UserDTO {
+public class UserDTO
+{
 
     @Schema(
             description = "Email do usuário (deve ser único)",

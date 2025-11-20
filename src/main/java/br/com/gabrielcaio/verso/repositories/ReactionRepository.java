@@ -4,15 +4,15 @@ import br.com.gabrielcaio.verso.domain.entity.Article;
 import br.com.gabrielcaio.verso.domain.entity.Reaction;
 import br.com.gabrielcaio.verso.domain.entity.User;
 import br.com.gabrielcaio.verso.domain.enums.ReactionType;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Optional;
-
-public interface ReactionRepository extends JpaRepository<Reaction, Long> {
+public interface ReactionRepository extends JpaRepository<Reaction, Long>
+{
 
     Optional<Reaction> findByUserAndArticle(User user, Article article);
 
