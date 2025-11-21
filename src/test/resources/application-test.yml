@@ -22,3 +22,8 @@ logging:
 
 server:
   port: 0
+management:
+  server:
+    port: 0
+
+MANAGEMENT_PORT: 0

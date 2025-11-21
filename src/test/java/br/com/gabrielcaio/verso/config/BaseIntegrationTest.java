@@ -7,22 +7,23 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public abstract class BaseIntegrationTest
-{
+public abstract class BaseIntegrationTest {
 
-    @Container
-    public static PostgreSQLContainer<?> POSTGRES =
-            new PostgreSQLContainer<>("postgres:16")
-                    .withDatabaseName("verso_test")
-                    .withUsername("postgres")
-                    .withPassword("postgres");
+  @Container
+  public static PostgreSQLContainer<?> POSTGRES =
+      new PostgreSQLContainer<>("postgres:16")
+          .withDatabaseName("verso_test")
+          .withUsername("postgres")
+          .withPassword("postgres");
 
-    @DynamicPropertySource
-    static void configure(DynamicPropertyRegistry registry)
-    {
-        registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
-        registry.add("spring.datasource.username", POSTGRES::getUsername);
-        registry.add("spring.datasource.password", POSTGRES::getPassword);
-    }
+  @DynamicPropertySource
+  static void configure(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+    registry.add("spring.datasource.username", POSTGRES::getUsername);
+    registry.add("spring.datasource.password", POSTGRES::getPassword);
+
+    // ADICIONE ESTAS LINHAS PARA RESOLVER O ERRO DO MANAGEMENT_PORT
+    registry.add("management.server.port", () -> "0");
+    registry.add("MANAGEMENT_PORT", () -> "0");
+  }
 }
-

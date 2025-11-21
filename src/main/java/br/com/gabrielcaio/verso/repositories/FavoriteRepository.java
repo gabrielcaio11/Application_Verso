@@ -10,21 +10,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface FavoriteRepository extends JpaRepository<Favorite, Long>
-{
+public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
-    Optional<Favorite> findByUserAndArticleId(User user, Long articleId);
+  Optional<Favorite> findByUserAndArticleId(User user, Long articleId);
 
-    boolean existsByUserAndArticleId(User user, Long articleId);
+  boolean existsByUserAndArticleId(User user, Long articleId);
 
-    @Query("SELECT f FROM Favorite f WHERE f.user = :user AND f.article.status = :status")
-    Page<Favorite> findAllByUserAndArticleStatus(
-            @Param("user") User user,
-            @Param("status") ArticleStatus status,
-            Pageable pageable
-    );
+  @Query("SELECT f FROM Favorite f WHERE f.user = :user AND f.article.status = :status")
+  Page<Favorite> findAllByUserAndArticleStatus(
+      @Param("user") User user, @Param("status") ArticleStatus status, Pageable pageable);
 
-    Page<Favorite> findAllByUser(User user, Pageable pageable);
+  Page<Favorite> findAllByUser(User user, Pageable pageable);
 
-    void deleteByUserAndArticleId(User user, Long articleId);
+  void deleteByUserAndArticleId(User user, Long articleId);
 }

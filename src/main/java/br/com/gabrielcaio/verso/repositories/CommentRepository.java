@@ -8,17 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CommentRepository extends JpaRepository<Comment, Long>
-{
-    Page<Comment> findByArticleAndParentIsNullOrderByCreatedAtAsc(
-            Article article, Pageable pageable
-    );
+public interface CommentRepository extends JpaRepository<Comment, Long> {
+  Page<Comment> findByArticleAndParentIsNullOrderByCreatedAtAsc(Article article, Pageable pageable);
 
-    List<Comment> findByParentOrderByCreatedAtAsc(Comment parent);
+  List<Comment> findByParentOrderByCreatedAtAsc(Comment parent);
 
-    Page<Comment> findByArticleOrderByCreatedAtAsc(Article article, Pageable pageable);
+  Page<Comment> findByArticleOrderByCreatedAtAsc(Article article, Pageable pageable);
 
-    boolean existsByIdAndAuthor(Long id, User author);
+  boolean existsByIdAndAuthor(Long id, User author);
 
-    long countByArticle(Article article);
+  long countByArticle(Article article);
 }

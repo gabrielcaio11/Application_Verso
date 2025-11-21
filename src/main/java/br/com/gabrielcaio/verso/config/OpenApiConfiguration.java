@@ -13,37 +13,33 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class OpenApiConfiguration
-{
-    private static final String SECURITY_SCHEME_NAME = "basicAuth";
+public class OpenApiConfiguration {
+  private static final String SECURITY_SCHEME_NAME = "basicAuth";
 
-    @Bean
-    public OpenAPI customOpenAPI()
-    {
-        return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes(
-                                SECURITY_SCHEME_NAME,
-                                new SecurityScheme()
-                                        .type(SecurityScheme.Type.HTTP)
-                                        .scheme("basic")
-                        ))
-                .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
-                .info(new Info()
-                        .title("Application Verso")
-                        .version("v1")
-                        .description(
-                                "API REST para sistema de criação, publicação e gerenciamento de artigos")
-                        .contact(new Contact()
-                                .name("Gabriel Caio")
-                                .email("gabrielcaio848@gmail.com")
-                                .url("https://verso.com"))
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
-                .servers(List.of(
-                        new Server()
-                                .url("http://localhost:8080")
-                                .description("Ambiente Local")));
-    }
+  @Bean
+  public OpenAPI customOpenApi() {
+    return new OpenAPI()
+        .components(
+            new Components()
+                .addSecuritySchemes(
+                    SECURITY_SCHEME_NAME,
+                    new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("basic")))
+        .addSecurityItem(new SecurityRequirement().addList(SECURITY_SCHEME_NAME))
+        .info(
+            new Info()
+                .title("Application Verso")
+                .version("v1")
+                .description(
+                    "API REST para sistema de criação, publicação e gerenciamento de artigos")
+                .contact(
+                    new Contact()
+                        .name("Gabriel Caio")
+                        .email("gabrielcaio848@gmail.com")
+                        .url("https://verso.com"))
+                .license(
+                    new License()
+                        .name("Apache 2.0")
+                        .url("https://www.apache.org/licenses/LICENSE-2.0.html")))
+        .servers(List.of(new Server().url("http://localhost:8080").description("Ambiente Local")));
+  }
 }

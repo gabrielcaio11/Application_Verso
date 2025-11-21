@@ -14,80 +14,80 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("test")
-public class TestDataLoader implements CommandLineRunner
-{
+public class TestDataLoader implements CommandLineRunner {
 
-    private final UserRepository userRepository;
-    private final RolesRepository rolesRepository;
-    private final CategoryRepository categoryRepository;
-    private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+  private final RolesRepository rolesRepository;
+  private final CategoryRepository categoryRepository;
+  private final PasswordEncoder passwordEncoder;
 
-    public TestDataLoader(
-            UserRepository userRepository,
-            RolesRepository rolesRepository,
-            CategoryRepository categoryRepository,
-            PasswordEncoder passwordEncoder
-    )
-    {
-        this.userRepository = userRepository;
-        this.rolesRepository = rolesRepository;
-        this.categoryRepository = categoryRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+  public TestDataLoader(
+      UserRepository userRepository,
+      RolesRepository rolesRepository,
+      CategoryRepository categoryRepository,
+      PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.rolesRepository = rolesRepository;
+    this.categoryRepository = categoryRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
-    @Override
-    public void run(String... args) throws Exception
-    {
-        // Limpar dados existentes para garantir estado consistente
-        userRepository.deleteAll();
-        rolesRepository.deleteAll();
-        categoryRepository.deleteAll();
+  @Override
+  public void run(String... args) throws Exception {
+    // Limpar dados existentes para garantir estado consistente
+    userRepository.deleteAll();
+    rolesRepository.deleteAll();
+    categoryRepository.deleteAll();
 
-        // Criar ROLE USER se não existir
-        Roles roleUser = rolesRepository.findByName("USER")
-                .orElseGet(() ->
-                {
-                    Roles role = new Roles();
-                    role.setName("USER");
-                    return rolesRepository.save(role);
+    // Criar ROLE USER se não existir
+    Roles roleUser =
+        rolesRepository
+            .findByName("USER")
+            .orElseGet(
+                () -> {
+                  Roles role = new Roles();
+                  role.setName("USER");
+                  return rolesRepository.save(role);
                 });
 
-        // Criar ROLE ADMIN se não existir
-        Roles roleAdmin = rolesRepository.findByName("ADMIN")
-                .orElseGet(() ->
-                {
-                    Roles role = new Roles();
-                    role.setName("ADMIN");
-                    return rolesRepository.save(role);
+    // Criar ROLE ADMIN se não existir
+    Roles roleAdmin =
+        rolesRepository
+            .findByName("ADMIN")
+            .orElseGet(
+                () -> {
+                  Roles role = new Roles();
+                  role.setName("ADMIN");
+                  return rolesRepository.save(role);
                 });
 
-        // Criar usuário admin
-        User adminUser = new User();
-        adminUser.setUsername("admin_test");
-        adminUser.setEmail("admin@test.com");
-        adminUser.setPassword(passwordEncoder.encode("123456"));
-        adminUser.setRoles(Set.of(roleAdmin));
-        userRepository.save(adminUser);
+    // Criar usuário admin
+    User adminUser = new User();
+    adminUser.setUsername("admin_test");
+    adminUser.setEmail("admin@test.com");
+    adminUser.setPassword(passwordEncoder.encode("123456"));
+    adminUser.setRoles(Set.of(roleAdmin));
+    userRepository.save(adminUser);
 
-        // Criar usuário comum
-        User normalUser = new User();
-        normalUser.setUsername("user_test");
-        normalUser.setEmail("user@test.com");
-        normalUser.setPassword(passwordEncoder.encode("123456"));
-        normalUser.setRoles(Set.of(roleUser));
-        userRepository.save(normalUser);
+    // Criar usuário comum
+    User normalUser = new User();
+    normalUser.setUsername("user_test");
+    normalUser.setEmail("user@test.com");
+    normalUser.setPassword(passwordEncoder.encode("123456"));
+    normalUser.setRoles(Set.of(roleUser));
+    userRepository.save(normalUser);
 
-        // Criar categorias padrão
-        Category defaultCategory = new Category();
-        defaultCategory.setName("Sem categoria");
-        categoryRepository.save(defaultCategory);
+    // Criar categorias padrão
+    Category defaultCategory = new Category();
+    defaultCategory.setName("Sem categoria");
+    categoryRepository.save(defaultCategory);
 
-        Category techCategory = new Category();
-        techCategory.setName("Tecnologia");
-        categoryRepository.save(techCategory);
+    Category techCategory = new Category();
+    techCategory.setName("Tecnologia");
+    categoryRepository.save(techCategory);
 
-        Category educationCategory = new Category();
-        educationCategory.setName("Educação");
-        categoryRepository.save(educationCategory);
-    }
+    Category educationCategory = new Category();
+    educationCategory.setName("Educação");
+    categoryRepository.save(educationCategory);
+  }
 }

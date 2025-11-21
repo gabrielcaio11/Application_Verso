@@ -9,23 +9,20 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-public interface NotificationRepository extends JpaRepository<Notification, Long>
-{
+  Page<Notification> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 
-    Page<Notification> findAllByUserOrderByCreatedAtDesc(User user, Pageable pageable);
+  Page<Notification> findAllByUserAndReadOrderByCreatedAtDesc(
+      User user, boolean read, Pageable pageable);
 
-    Page<Notification> findAllByUserAndReadOrderByCreatedAtDesc(
-            User user, boolean read, Pageable pageable
-    );
+  long countByUserAndRead(User user, boolean read);
 
-    long countByUserAndRead(User user, boolean read);
+  @Modifying
+  @Query("UPDATE Notification n SET n.read = true WHERE n.user = :user AND n.read = false")
+  void markAllAsReadByUser(@Param("user") User user);
 
-    @Modifying
-    @Query("UPDATE Notification n SET n.read = true WHERE n.user = :user AND n.read = false")
-    void markAllAsReadByUser(@Param("user") User user);
-
-    @Modifying
-    @Query("UPDATE Notification n SET n.read = true WHERE n.id = :id AND n.user = :user")
-    void markAsRead(@Param("id") Long id, @Param("user") User user);
+  @Modifying
+  @Query("UPDATE Notification n SET n.read = true WHERE n.id = :id AND n.user = :user")
+  void markAsRead(@Param("id") Long id, @Param("user") User user);
 }

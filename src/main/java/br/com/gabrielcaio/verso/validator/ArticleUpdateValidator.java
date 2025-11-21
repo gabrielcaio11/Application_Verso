@@ -12,51 +12,37 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ArticleUpdateValidator
-{
+public class ArticleUpdateValidator {
 
-    private final ArticleRepository articleRepository;
+  private final ArticleRepository articleRepository;
 
-    public void validate(Article article, UpdateArticleRequestDTO updated, User currentUser)
-    {
+  public void validate(Article article, UpdateArticleRequestDTO updated, User currentUser) {
 
-        if(!article.getAuthor()
-                .getId()
-                .equals(currentUser.getId()))
-        {
-            throw new AccessDeniedException("Você só pode editar seus próprios artigos");
-        }
-
-        if(article.getStatus() == ArticleStatus.PUBLICADO &&
-                "RASCUNHO".equalsIgnoreCase(updated.getStatus()))
-        {
-            throw new BusinessException(
-                    "Não é possível alterar o status de um artigo publicado para rascunho");
-        }
-
-        if(updated.getStatus() != null)
-        {
-            try
-            {
-                ArticleStatus.valueOf(updated.getStatus()
-                        .toUpperCase());
-            } catch(IllegalArgumentException e)
-            {
-                throw new BusinessException("Status inválido: " + updated.getStatus());
-            }
-        }
-
-        if(updated.getTitle() != null && !updated.getTitle()
-                .isBlank())
-        {
-            boolean exists = articleRepository.existsByAuthorIdAndTitleIgnoreCase(
-                    currentUser.getId(), updated.getTitle());
-            if(exists && !updated.getTitle()
-                    .equalsIgnoreCase(article.getTitle()))
-            {
-                throw new BusinessException("Você já possui um artigo com esse título");
-            }
-        }
+    if (!article.getAuthor().getId().equals(currentUser.getId())) {
+      throw new AccessDeniedException("Você só pode editar seus próprios artigos");
     }
-}
 
+    if (article.getStatus() == ArticleStatus.PUBLICADO
+        && "RASCUNHO".equalsIgnoreCase(updated.getStatus())) {
+      throw new BusinessException(
+          "Não é possível alterar o status de um artigo publicado para rascunho");
+    }
+
+    if (updated.getStatus() != null) {
+      try {
+        ArticleStatus.valueOf(updated.getStatus().toUpperCase());
+      } catch (IllegalArgumentException e) {
+        throw new BusinessException("Status inválido: " + updated.getStatus());
+      }
+    }
+
+    if (updated.getTitle() != null && !updated.getTitle().isBlank()) {
+      boolean exists =
+          articleRepository.existsByAuthorIdAndTitleIgnoreCase(
+              currentUser.getId(), updated.getTitle());
+      if (exists && !updated.getTitle().equalsIgnoreCase(article.getTitle())) {
+        throw new BusinessException("Você já possui um artigo com esse título");
+      }
+    }
+  }
+}

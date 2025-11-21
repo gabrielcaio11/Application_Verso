@@ -9,8 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class RolesWithIdAndName
-{
-    private Long id;
-    private String name;
+public class RolesWithIdAndName {
+  private Long id;
+  private String name;
 }

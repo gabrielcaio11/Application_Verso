@@ -12,24 +12,31 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "DTO com estatísticas de reações de um artigo")
-public class ArticleReactionStatsDTO
-{
+public class ArticleReactionStatsDTO {
 
-    @Schema(description = "ID do artigo", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long articleId;
+  @Schema(description = "ID do artigo", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+  private Long articleId;
 
-    @Schema(description = "Título do artigo", example = "Introdução ao Spring Boot", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String articleTitle;
+  @Schema(
+      description = "Título do artigo",
+      example = "Introdução ao Spring Boot",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  private String articleTitle;
 
-    @Schema(description = "Total de reações no artigo", example = "150", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long totalReactions;
+  @Schema(
+      description = "Total de reações no artigo",
+      example = "150",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  private Long totalReactions;
 
-    @Schema(description = "Contagem de reações por tipo", example = "{\"LIKE\": 100, \"LOVE\": 30, \"LAUGH\": 20}", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Map<String, Long> reactionsByType;
+  @Schema(
+      description = "Contagem de reações por tipo",
+      example = "{\"LIKE\": 100, \"LOVE\": 30, \"LAUGH\": 20}",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  private Map<String, Long> reactionsByType;
 
-    @Schema(
-            description = "Tipo de reação do usuário autenticado (null se não reagiu)",
-            example = "LIKE"
-    )
-    private String userReaction;
+  @Schema(
+      description = "Tipo de reação do usuário autenticado (null se não reagiu)",
+      example = "LIKE")
+  private String userReaction;
 }

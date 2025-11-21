@@ -6,13 +6,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class CommentResponseDTO
-{
-    private Long id;
-    private String content;
-    private Long authorId;
-    private String authorUsername;
-    private Long articleId;
-    private Long parentId;
-    private LocalDateTime createdAt;
+public class CommentResponseDTO {
+  private Long id;
+  private String content;
+  private Long authorId;
+  private String authorUsername;
+  private Long articleId;
+  private Long parentId;
+  private LocalDateTime createdAt;
 }

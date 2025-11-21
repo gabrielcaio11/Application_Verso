@@ -14,33 +14,30 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 @Entity
-@Table(name = "tb_roles", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_role_name", columnNames = "name")
-})
+@Table(
+    name = "tb_roles",
+    uniqueConstraints = {@UniqueConstraint(name = "uk_role_name", columnNames = "name")})
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Roles implements GrantedAuthority
-{
+public class Roles implements GrantedAuthority {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "role_id")
+  private Long id;
 
-    @Column(name = "name", nullable = false, unique = true)
-    private String name;
+  @Column(name = "name", nullable = false, unique = true)
+  private String name;
 
-    @Override
-    public String getAuthority()
-    {
-        return name;
-    }
+  @Override
+  public String getAuthority() {
+    return name;
+  }
 
-    @Override
-    public String toString()
-    {
-        return "{\"identifier\":\"" + id + "\", \"name\":\"" + name + "\"}";
-    }
+  @Override
+  public String toString() {
+    return "{\"identifier\":\"" + id + "\", \"name\":\"" + name + "\"}";
+  }
 }

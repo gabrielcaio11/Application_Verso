@@ -32,40 +32,45 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Comment
-{
+public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "comment_id")
+  private Long id;
 
-    @Lob
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+  @Lob
+  @Column(nullable = false, columnDefinition = "TEXT")
+  private String content;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_user"))
-    private User author;
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "author_id",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_comment_user"))
+  private User author;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey(name = "fk_comment_article"))
-    private Article article;
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "article_id",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_comment_article"))
+  private Article article;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "fk_comment_parent"))
-    private Comment parent;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "parent_id", foreignKey = @ForeignKey(name = "fk_comment_parent"))
+  private Comment parent;
 
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @OrderBy("createdAt ASC")
-    @Builder.Default
-    private Set<Comment> replies = new HashSet<>();
+  @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  @OrderBy("createdAt ASC")
+  @Builder.Default
+  private Set<Comment> replies = new HashSet<>();
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }

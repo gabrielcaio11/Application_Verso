@@ -20,34 +20,33 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "tb_categories", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_category_name", columnNames = "name")
-})
+@Table(
+    name = "tb_categories",
+    uniqueConstraints = {@UniqueConstraint(name = "uk_category_name", columnNames = "name")})
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Category
-{
+public class Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "category_id")
+  private Long id;
 
-    @Column(nullable = false, unique = true, length = 60)
-    private String name;
+  @Column(nullable = false, unique = true, length = 60)
+  private String name;
 
-    @OneToMany(mappedBy = "category")
-    @Builder.Default
-    private Set<Article> articles = new HashSet<>();
+  @OneToMany(mappedBy = "category")
+  @Builder.Default
+  private Set<Article> articles = new HashSet<>();
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }

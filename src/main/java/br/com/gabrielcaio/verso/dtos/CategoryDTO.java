@@ -11,12 +11,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Representação de uma categoria")
-public class CategoryDTO
-{
+public class CategoryDTO {
 
-    @Schema(description = "ID único da categoria", example = "1")
-    private Long id;
+  @Schema(description = "ID único da categoria", example = "1")
+  private Long id;
 
-    @Schema(description = "Nome da categoria", example = "Tecnologia", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String name;
+  @Schema(
+      description = "Nome da categoria",
+      example = "Tecnologia",
+      requiredMode = Schema.RequiredMode.REQUIRED)
+  private String name;
 }

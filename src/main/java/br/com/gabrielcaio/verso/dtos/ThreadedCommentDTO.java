@@ -7,13 +7,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ThreadedCommentDTO
-{
-    private Long id;
-    private String content;
-    private Long authorId;
-    private String authorUsername;
-    private Long articleId;
-    private LocalDateTime createdAt;
-    private List<ThreadedCommentDTO> replies;
+public class ThreadedCommentDTO {
+  private Long id;
+  private String content;
+  private Long authorId;
+  private String authorUsername;
+  private Long articleId;
+  private LocalDateTime createdAt;
+  private List<ThreadedCommentDTO> replies;
 }

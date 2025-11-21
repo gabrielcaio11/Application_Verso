@@ -24,41 +24,48 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
-@Table(name = "tb_reactions", uniqueConstraints = {
-        @UniqueConstraint(name = "uk_user_article_reaction", columnNames = {
-                "user_id", "article_id"
-        })
-})
+@Table(
+    name = "tb_reactions",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          name = "uk_user_article_reaction",
+          columnNames = {"user_id", "article_id"})
+    })
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Reaction
-{
+public class Reaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "reaction_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "reaction_id")
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private ReactionType type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 20)
+  private ReactionType type;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_reaction_user"))
-    private User user;
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "user_id",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_reaction_user"))
+  private User user;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id", nullable = false, foreignKey = @ForeignKey(name = "fk_reaction_article"))
-    private Article article;
+  @ManyToOne(optional = false, fetch = FetchType.LAZY)
+  @JoinColumn(
+      name = "article_id",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_reaction_article"))
+  private Article article;
 
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+  @CreationTimestamp
+  @Column(name = "created_at", updatable = false)
+  private LocalDateTime createdAt;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @UpdateTimestamp
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 }
