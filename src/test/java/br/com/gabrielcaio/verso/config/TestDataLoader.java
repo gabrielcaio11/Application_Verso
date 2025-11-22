@@ -35,9 +35,9 @@ public class TestDataLoader implements CommandLineRunner {
   @Override
   public void run(String... args) throws Exception {
     // Limpar dados existentes para garantir estado consistente
+    categoryRepository.deleteAll();
     userRepository.deleteAll();
     rolesRepository.deleteAll();
-    categoryRepository.deleteAll();
 
     // Criar ROLE USER se não existir
     Roles roleUser =

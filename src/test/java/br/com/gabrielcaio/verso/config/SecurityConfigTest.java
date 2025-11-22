@@ -17,8 +17,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
-@Profile("!test")
-public class SecurityConfig {
+@Profile("test")
+public class SecurityConfigTest {
 
   @Bean
   public SecurityFilterChain securityFilterChain(
@@ -27,15 +27,6 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/verso/users/register")
-                    .permitAll()
-                    .requestMatchers("/actuator/**")
-                    .permitAll()
-                    .requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-ui.html",
-                        "/v3/api-docs/**",
-                        "/api-docs/**",
-                        "/webjars/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated())

@@ -1,4 +1,4 @@
-package br.com.gabrielcaio.verso.security;
+package br.com.gabrielcaio.verso.config;
 
 import br.com.gabrielcaio.verso.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Profile("!test")
-public class CustomUserDetailsService implements UserDetailsService {
+@Profile("test")
+public class CustomUserDetailsServiceTest implements UserDetailsService {
   private final UserRepository userRepository;
 
   @Override
